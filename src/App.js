@@ -1,19 +1,32 @@
 import { useState } from "react";
-import Login from "./Login";
-import Navbar from "./Navbar";
+import Login from "./pages/Login";
+import Navbar from "./pages/Navbar";
+import Register from "./pages/Register";
+import { BrowserRouter, Link, Route, Routes } from "react-router-dom";
+import Home from "./pages/Home";
+
+const Layout = () => (
+  <div className="min-h-screen bg-grey-50 flex flex-col justify-center">
+    <Routes>
+      <Route path="register" element={<Register />} />
+      <Route exact path="/" element={<Login />} />
+    </Routes>
+  </div>
+);
 
 function App() {
   return (
-    <div className="">
+    <div className="absolute w-screen">
       {/* Navbar */}
 
       <div className="absolute w-screen">
         <Navbar />
       </div>
-      {/* Content */}
-      <div className="min-h-screen bg-grey-50 flex flex-col justify-center">
-        <Login />
-      </div>
+      {/* ----------------------CONTENT----------------------- */}
+      <Routes>
+        <Route path="*" element={<Layout />} />
+        <Route path="home" element={<Home />} />
+      </Routes>
     </div>
   );
 }

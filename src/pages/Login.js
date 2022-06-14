@@ -1,20 +1,32 @@
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { app } from "./firebase-config";
+import { Navigate, useNavigate } from "react-router-dom";
+import { app } from "../firebase-config";
 
 const auth = getAuth();
-function signIn(e) {
-  e.preventDefault();
-  signInWithEmailAndPassword(auth, e.target.email.value, e.target.pass.value)
-    .then((userCredential) => {
-      const user = userCredential.user;
-    })
-    .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-    });
+
+function showPass() {
+  var box = document.getElementById("password");
+  if (box.type === "password") box.type = "text";
+  else box.type = "password";
 }
 
 const Login = () => {
+  const navigate = useNavigate();
+
+  function signIn(e) {
+    e.preventDefault();
+    signInWithEmailAndPassword(auth, e.target.email.value, e.target.pass.value)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        console.log("OK");
+        navigate("/home");
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+      });
+  }
+
   return (
     <div className="">
       <div className="max-w-md w-full mx-auto">
@@ -38,6 +50,7 @@ const Login = () => {
               Password
             </label>
             <input
+              id="password"
               name="pass"
               type="password"
               className="w-full p-2 border border-gray-300 rounded mt-1"
@@ -50,9 +63,10 @@ const Login = () => {
                 name=""
                 id=""
                 className="h-4 w-4 text-blue-300 rounded"
+                onClick={showPass}
               />
               <label htmlFor="" className="ml-2 text-sm text-gray-600">
-                Remember Me
+                Show Password
               </label>
             </div>
           </div>
