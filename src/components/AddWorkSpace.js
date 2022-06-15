@@ -1,4 +1,21 @@
+import { addDoc, collection } from "firebase/firestore";
+import { useEffect } from "react";
+import { db } from "../firebase-config";
+
 const AddWorkSpace = (props) => {
+  const colRef = collection(db, "workspace");
+
+  useEffect(() => {
+    const addForm = document.querySelector(".addWorkspace");
+    addForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      addDoc(colRef, {
+        name: addForm.wsName.value,
+        desc: addForm.wsDesc.value,
+      });
+    });
+  });
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center">
       <div className="bg-white p-10 rounded w-1/2 h-3/4 absolute space-y-3">
@@ -20,7 +37,7 @@ const AddWorkSpace = (props) => {
           Boost your productivity by making it easier for everyone to access
           boards in one location.
         </p>
-        <form action="">
+        <form action="" className="addWorkspace">
           <div className="space-y-6">
             <div className="">
               <label
@@ -49,7 +66,7 @@ const AddWorkSpace = (props) => {
                 Workspace's Description
               </label>
               <textarea
-                name="wsName"
+                name="wsDesc"
                 type="text"
                 className="w-1/2 p-2 border border-gray-300 rounded mt-1 h-full resize-none"
               />

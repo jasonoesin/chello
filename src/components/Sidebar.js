@@ -18,9 +18,9 @@ const Sidebar = () => {
         Lists
       </p>
       <p className="w-1/6 cursor-pointer transition hover:bg-blue-200 p-2">
-        Workspaces
+        Cards
       </p>
-      <div className="w-1/6 p-2 flex flex-row">
+      <div className="w-1/6 p-2 flex flex-row text-gray-400">
         Add Workspace
         <div
           onClick={() => setShowModal(true)}
@@ -28,6 +28,9 @@ const Sidebar = () => {
         >
           +
         </div>
+      </div>
+      <div className="">
+        <hr className="w-1/6 border-t-2 border-blue-300" />
       </div>
 
       {showModal ? <AddWorkSpace onClose={handleClose} /> : null}

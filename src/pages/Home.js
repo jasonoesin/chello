@@ -8,7 +8,9 @@ const Home = () => {
       <div className="mt-24 w-screen h-fit">
         <div className="wrap px-16">
           <Sidebar />
-          <Workspace />
+          <div className="mt-4">
+            <Workspace />
+          </div>
         </div>
       </div>
     </div>
