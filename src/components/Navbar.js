@@ -2,16 +2,20 @@ import { Link } from "react-router-dom";
 import React from "react";
 
 const Navbar = () => {
-  function openDropdown(e) {
-    var drop = document.getElementById("dropdown-menu");
+  // React.useEffect(() => {
+  //   window.onclick = function (event) {
+  //     if (!event.target.matches("#dropdown")) {
+  //       var dropdowns = document.getElementById("dropdown-menu");
+  //       if (!dropdowns.classList.contains("hidden")) {
+  //         console.log("NO");
+  //         dropdowns.classList.add("hidden");
+  //       }
+  //     }
+  //   };
+  // });
 
-    drop.classList.remove("hidden");
-  }
-
-  function closeDropdown() {
-    var drop = document.getElementById("dropdown-menu");
-
-    drop.classList.add("hidden");
+  function func() {
+    document.getElementById("dropdown-menu").classList.toggle("hidden");
   }
 
   return (
@@ -26,11 +30,11 @@ const Navbar = () => {
           <button
             type="button"
             className="dropdown dropdown-toggle flex mr-3 text-sm bg-gray-800 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
-            id="user-menu-button"
+            id="dropdown"
             aria-expanded="false"
             data-dropdown-toggle="dropdown"
-            onFocus={openDropdown}
-            onBlur={closeDropdown}
+            onClick={func}
+            // onBlur={closeDropdown}
           >
             <img
               className="w-8 h-8 rounded-full"
@@ -111,12 +115,12 @@ const Navbar = () => {
             </a>
           </li>
           <li>
-            <a
-              href="#"
+            <Link
+              to="/settings"
               className="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
             >
               Settings
-            </a>
+            </Link>
           </li>
           <li>
             <a

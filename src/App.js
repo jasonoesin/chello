@@ -1,9 +1,10 @@
 import { useState } from "react";
 import Login from "./pages/Login";
-import Navbar from "./pages/Navbar";
+import Navbar from "./components/Navbar";
 import Register from "./pages/Register";
 import { BrowserRouter, Link, Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
+import Settings from "./pages/Settings";
 
 const Layout = () => (
   <div className="min-h-screen bg-grey-50 flex flex-col justify-center">
@@ -25,6 +26,7 @@ function App() {
       {/* ----------------------CONTENT----------------------- */}
       <Routes>
         <Route path="*" element={<Layout />} />
+        <Route path="settings" element={<Settings />} />
         <Route path="home" element={<Home />} />
       </Routes>
     </div>
