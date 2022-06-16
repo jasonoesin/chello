@@ -19,14 +19,7 @@ const auth = getAuth();
 
 const Workspace = () => {
   const [workspaceList, setWorkSpace] = useState([]);
-  const [user, setUser] = useState();
-
   const colRef = collection(db, "workspace");
-
-  // ------
-
-  // ------
-
   useEffect(() => {
     // const getWorkSpaces = async () => {
     //   const data = await getDocs(colRef);
@@ -37,7 +30,6 @@ const Workspace = () => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         // const uid = user.uid;
-        // console.log(uid);
 
         const q = query(
           colRef,

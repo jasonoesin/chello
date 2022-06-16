@@ -49,9 +49,9 @@ const AddBoard = () => {
       {isOpen ? (
         <div
           ref={menuRef}
-          className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+          className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 "
         >
-          <div className="!PARENT p-12 w-96 h-[32rem] bg-white rounded-lg border">
+          <div className="!PARENT p-12 w-96 h-[32rem] bg-white rounded-lg border drop-shadow-xl">
             <p className="font-bold mb-4">Create a new Board</p>
             <form action="" className="addBoard">
               <div className="space-y-6">

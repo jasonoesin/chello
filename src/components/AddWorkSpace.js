@@ -11,9 +11,7 @@ const AddWorkSpace = (props) => {
 
   onAuthStateChanged(auth, (user) => {
     if (user) {
-      const uid = user.uid;
-      console.log(uid);
-      userID = uid;
+      userID = user.uid;
     }
   });
 
@@ -28,7 +26,7 @@ const AddWorkSpace = (props) => {
       });
       props.onClose();
     });
-  });
+  }, [userID]);
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center">
