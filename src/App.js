@@ -17,9 +17,7 @@ const Layout = () => (
 
 function App() {
   return (
-    <div className="absolute w-screen">
-      {/* Navbar */}
-
+    <div className="absolute w-screen ">
       <div className="absolute w-screen">
         <Navbar />
       </div>

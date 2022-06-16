@@ -36,7 +36,7 @@ const Workspace = () => {
         return (
           <div
             key={workspace.id}
-            className="p-2 flex items-center justify-between w-1/5 cursor-pointer transition hover:bg-gray-200"
+            className="p-2 flex items-center justify-between w-full cursor-pointer transition hover:bg-gray-200"
           >
             <div className="">
               <svg

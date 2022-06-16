@@ -19,14 +19,14 @@ const Navbar = () => {
   }
 
   return (
-    <nav className="bg-white border-gray-200 px-2 sm:px-4 py-2.5 rounded dark:bg-gray-800">
+    <nav className="bg-white border-gray-200 px-2 sm:px-4 py-2.5 rounded dark:bg-gray-800 border-b">
       <div className="container flex flex-wrap justify-between items-center mx-auto">
         <a href="" className="flex items-center">
           <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">
             CHello
           </span>
         </a>
-        <div className="flex items-center md:order-2">
+        <div className="flex items-center md:order-2 mr-12">
           <button
             type="button"
             className="dropdown dropdown-toggle flex mr-3 text-sm bg-gray-800 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
@@ -94,7 +94,7 @@ const Navbar = () => {
       </div>
 
       <div
-        className="hidden w-64 absolute z-50 my-4 right-4 text-base list-none bg-white border rounded divide-y divide-gray-100 drop-shadow-xl dark:divide-gray-600"
+        className="mr-12 hidden w-64 absolute z-50 my-4 right-4 text-base list-none bg-white border rounded divide-y divide-gray-100 drop-shadow-xl dark:divide-gray-600"
         id="dropdown-menu"
       >
         <div className="py-3 px-4">

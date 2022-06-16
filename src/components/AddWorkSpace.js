@@ -13,6 +13,7 @@ const AddWorkSpace = (props) => {
         name: addForm.wsName.value,
         desc: addForm.wsDesc.value,
       });
+      props.onClose();
     });
   });
 

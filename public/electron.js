@@ -9,8 +9,8 @@ function createWindow() {
     width: 800,
     height: 600,
     webPreferences: {
-      nodeIntegration: true
-    }
+      nodeIntegration: true,
+    },
   });
 
   // and load the index.html of the app.
@@ -22,9 +22,9 @@ function createWindow() {
   );
 
   // Open the DevTools.
-  // if (isDev) {
-  //   win.webContents.openDevTools({ mode: "detach" });
-  // }
+  if (isDev) {
+    win.webContents.openDevTools({ mode: "detach" });
+  }
 }
 
 // This method will be called when Electron has finished
