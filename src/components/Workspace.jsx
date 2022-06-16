@@ -1,18 +1,31 @@
 import { useEffect } from "react";
 import { useState } from "react";
 import {
+  doc,
   getFirestore,
   collection,
   getDoc,
   getDocs,
   onSnapshot,
+  updateDoc,
+  arrayUnion,
+  query,
+  where,
 } from "firebase/firestore";
 import { db } from "../firebase-config";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+
+const auth = getAuth();
 
 const Workspace = () => {
   const [workspaceList, setWorkSpace] = useState([]);
+  const [user, setUser] = useState();
 
   const colRef = collection(db, "workspace");
+
+  // ------
+
+  // ------
 
   useEffect(() => {
     // const getWorkSpaces = async () => {
@@ -20,16 +33,31 @@ const Workspace = () => {
     //   setWorkSpace(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
     // };
     // getWorkSpaces();
-    onSnapshot(colRef, (snapshot) => {
-      if (!snapshot.empty) {
-        let workspaces = [];
-        snapshot.docs.forEach((doc) => {
-          workspaces.push({ ...doc.data(), id: doc.id });
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // const uid = user.uid;
+        // console.log(uid);
+
+        const q = query(
+          colRef,
+          where("members", "array-contains", auth.currentUser.uid)
+        );
+
+        onSnapshot(q, (snapshot) => {
+          if (!snapshot.empty) {
+            let workspaces = [];
+            snapshot.docs.forEach((doc) => {
+              workspaces.push({ ...doc.data(), id: doc.id });
+            });
+            setWorkSpace(workspaces);
+          }
         });
-        setWorkSpace(workspaces);
+      } else {
       }
     });
   }, []);
+
   return (
     <div className="space-y-0.5">
       {workspaceList.map((workspace) => {
@@ -54,7 +82,23 @@ const Workspace = () => {
                 />
               </svg>
             </div>
-            <div className="ml-2 w-full">{workspace.name}</div>
+            <div
+              onClick={() => {
+                // TESTING BUAT MASUKIN MEMBER
+                // const docRef = doc(db, "workspace", workspace.id);
+                // const docSnap = getDoc(docRef).then((snap) => {
+                //   if (snap.data().members) console.log(snap.data().members);
+                // });
+                // if (auth.currentUser !== null)
+                //   console.log(auth.currentUser.uid);
+                // updateDoc(docRef, {
+                //   members: arrayUnion(auth.currentUser.uid),
+                // });
+              }}
+              className="ml-2 w-full"
+            >
+              {workspace.name}
+            </div>
           </div>
         );
       })}

@@ -1,9 +1,21 @@
 import { addDoc, collection } from "firebase/firestore";
 import { useEffect } from "react";
 import { db } from "../firebase-config";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+
+const auth = getAuth();
+var userID;
 
 const AddWorkSpace = (props) => {
   const colRef = collection(db, "workspace");
+
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      const uid = user.uid;
+      console.log(uid);
+      userID = uid;
+    }
+  });
 
   useEffect(() => {
     const addForm = document.querySelector(".addWorkspace");
@@ -12,6 +24,7 @@ const AddWorkSpace = (props) => {
       addDoc(colRef, {
         name: addForm.wsName.value,
         desc: addForm.wsDesc.value,
+        members: [userID],
       });
       props.onClose();
     });
