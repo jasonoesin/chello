@@ -3,11 +3,7 @@ import Board from "./Board";
 
 const BoardContainer = () => {
   return (
-    <div className="flex flex-wrap">
-      <Board />
-      <Board />
-      <Board />
-      <Board />
+    <div className="flex flex-wrap ">
       <Board />
       <AddBoard />
     </div>
