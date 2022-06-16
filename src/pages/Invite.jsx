@@ -16,6 +16,7 @@ import { db } from "../firebase-config";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const auth = getAuth();
+var u = null;
 
 const Invite = () => {
   const [name, setName] = useState("");
@@ -25,6 +26,7 @@ const Invite = () => {
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
+        u = user;
         getDoc(ref).then((snap) => {
           if (snap.data() === undefined) return;
           setName(snap.data().name);
@@ -34,22 +36,28 @@ const Invite = () => {
   }, []);
 
   function join() {
-    updateDoc(ref, {
-      members: arrayUnion(auth.currentUser.uid),
-    });
+    if (u)
+      updateDoc(ref, {
+        members: arrayUnion(auth.currentUser.uid),
+      });
+    return;
   }
 
   return (
     <>
-      <div className="flex flex-col w-80 space-y-8">
-        <p className="font-bold text-center">Join {name} Workspace</p>
-        <button
-          onClick={join}
-          className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 rounded-md text-white text-sm"
-        >
-          Join
-        </button>
-      </div>
+      {name ? (
+        <div className="flex flex-col w-80 space-y-8">
+          <p className="font-bold text-center">Join {name} Workspace</p>
+          <button
+            onClick={join}
+            className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 rounded-md text-white text-sm"
+          >
+            Join
+          </button>
+        </div>
+      ) : (
+        <p className="font-bold">Error Invite Link !</p>
+      )}
     </>
   );
 };
