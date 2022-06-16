@@ -1,26 +1,34 @@
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import { app } from "../firebase-config";
+import { useNavigate } from "react-router-dom";
+import { app, db } from "../firebase-config";
+import { addDoc, collection } from "firebase/firestore";
 const auth = getAuth();
 
-function signUp(e) {
-  e.preventDefault();
-  createUserWithEmailAndPassword(
-    auth,
-    e.target.email.value,
-    e.target.pass.value
-  )
-    .then((userCredential) => {
-      // Signed in
-      const user = userCredential.user;
-      console.log("OK");
-    })
-    .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-    });
-}
-
 const Register = () => {
+  const navigate = useNavigate();
+
+  function signUp(e) {
+    e.preventDefault();
+    createUserWithEmailAndPassword(
+      auth,
+      e.target.email.value,
+      e.target.pass.value
+    )
+      .then((cred) => {
+        // Signed in
+        console.log(e.target.email.value);
+        addDoc(collection(db, "user"), {
+          email: e.target.email.value,
+          uid: cred.user.uid,
+        });
+        navigate("/home");
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+      });
+  }
+
   return (
     <div className="">
       <div className="max-w-md w-full mx-auto">
