@@ -14,6 +14,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../firebase-config";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { Link } from "react-router-dom";
 
 const auth = getAuth();
 
@@ -29,8 +30,6 @@ const Workspace = () => {
 
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        // const uid = user.uid;
-
         const q = query(
           colRef,
           where("members", "array-contains", auth.currentUser.uid)
@@ -54,7 +53,8 @@ const Workspace = () => {
     <div className="space-y-0.5">
       {workspaceList.map((workspace) => {
         return (
-          <div
+          <Link
+            to={"/workspace/" + workspace.id}
             key={workspace.id}
             className="p-2 flex items-center justify-between w-full cursor-pointer transition hover:bg-gray-200"
           >
@@ -91,7 +91,7 @@ const Workspace = () => {
             >
               {workspace.name}
             </div>
-          </div>
+          </Link>
         );
       })}
     </div>

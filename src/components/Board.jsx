@@ -6,15 +6,22 @@ import {
   getDoc,
   getDocs,
   onSnapshot,
+  query,
+  where,
 } from "firebase/firestore";
 import { db } from "../firebase-config";
+import { useParams, useLocation } from "react-router-dom";
 
 const Board = () => {
   const [boards, setBoard] = useState([]);
   const colRef = collection(db, "board");
+  const params = useParams();
+  const location = useLocation();
 
   useEffect(() => {
-    onSnapshot(colRef, (snapshot) => {
+    const q = query(colRef, where("workspace", "==", params.id));
+
+    const snaps = onSnapshot(q, (snapshot) => {
       if (!snapshot.empty) {
         let b = [];
         snapshot.docs.forEach((doc) => {
@@ -23,7 +30,9 @@ const Board = () => {
         setBoard(b);
       }
     });
-  }, []);
+
+    return snaps;
+  }, [location]);
 
   return (
     <>

@@ -6,12 +6,12 @@ import { getFirestore, collection, getDocs } from "firebase/firestore";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyD3cyOUgBdYyMZ61U0MEAncDdslWQ86CBw",
-  authDomain: "tpa-desktop-7d54d.firebaseapp.com",
-  projectId: "tpa-desktop-7d54d",
-  storageBucket: "tpa-desktop-7d54d.appspot.com",
-  messagingSenderId: "987011377576",
-  appId: "1:987011377576:web:092db8a133eb79246d159d",
+  apiKey: "AIzaSyBhN18lCjWcLG0VueicGCdbc8V1f7mTK-E",
+  authDomain: "chello-bc57b.firebaseapp.com",
+  projectId: "chello-bc57b",
+  storageBucket: "chello-bc57b.appspot.com",
+  messagingSenderId: "132208359798",
+  appId: "1:132208359798:web:af145846f832f6ad8d2257",
 };
 
 // Initialize Firebase
@@ -19,21 +19,5 @@ const app = firebase.initializeApp(firebaseConfig);
 
 // Initialize Firestore
 export const db = getFirestore();
-
-// Collection Reference
-// const colRef = collection(db, "workspace");
-
-// // Get Data
-// getDocs(colRef)
-//   .then((snapshot) => {
-//     let workspace = [];
-//     snapshot.docs.forEach((doc) => {
-//       workspace.push({ ...doc.data(), id: doc.id });
-//     });
-//     console.log(workspace);
-//   })
-//   .catch((err) => {
-//     console.log(err.message);
-//   });
 
 export default app;

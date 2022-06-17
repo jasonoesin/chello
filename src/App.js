@@ -12,6 +12,9 @@ import {
 import Home from "./pages/Home";
 import Settings from "./pages/Settings";
 import Invite from "./pages/Invite";
+import WorkspaceSettings from "./pages/WorkspaceSettings";
+import Workspace from "./components/Workspace";
+import WorkspacePage from "./pages/WorkspacePage";
 
 const Layout = () => (
   <div className="min-h-screen bg-grey-50 flex flex-col justify-center">
@@ -36,13 +39,15 @@ function App() {
         <Route
           path="/invite-workspace/:id"
           element={
-            <div className="w-screen h-fit h-screen flex justify-center items-center">
+            <div className="w-screen h-screen flex justify-center items-center">
               <Invite />
             </div>
           }
         />
-        <Route path="settings" element={<Settings />} />
-        <Route path="home" element={<Home />} />
+        <Route path="/workspace/:id" element={<WorkspacePage />} />
+        <Route path="/workspace/:id/settings" element={<WorkspaceSettings />} />
+        <Route path="/settings" element={<Settings />} />
+        <Route path="/home" element={<Home />} />
       </Routes>
     </div>
   );

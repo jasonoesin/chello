@@ -1,9 +1,11 @@
 import { useState, useRef, useEffect } from "react";
 import { addDoc, collection } from "firebase/firestore";
 import { db } from "../firebase-config";
+import { useParams } from "react-router-dom";
 
 const AddBoard = () => {
   let [isOpen, setIsOpen] = useState(false);
+  const params = useParams();
 
   let menuRef = useRef();
 
@@ -28,6 +30,7 @@ const AddBoard = () => {
         addDoc(colRef, {
           title: addForm.title.value,
           desc: addForm.desc.value,
+          workspace: params.id,
         });
       });
     }
@@ -38,7 +41,7 @@ const AddBoard = () => {
       <div className="p-4  w-[22rem] flex justify-center">
         <button
           href="#"
-          className="block p-6 w-full max-w-xs bg-gray-200 rounded-lg border border-gray-200 shadow-md hover:bg-gray-300
+          className="p-6 w-full max-w-xs bg-gray-200 rounded-lg border border-gray-200 shadow-md hover:bg-gray-300
             flex justify-center items-center"
           onClick={() => setIsOpen((isOpen) => !isOpen)}
         >

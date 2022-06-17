@@ -14,7 +14,9 @@ const Home = () => {
               <Workspace />
             </div>
           </div>
-          <div className="pl-64">{/* <BoardContainer /> */}</div>
+          <div className="pl-64">
+            <BoardContainer />
+          </div>
         </div>
       </div>
     </div>
