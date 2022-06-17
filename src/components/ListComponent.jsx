@@ -12,6 +12,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../firebase-config";
 import { useParams, useLocation, Link } from "react-router-dom";
+import Card from "./Card";
 
 const ListComponent = () => {
   const [lists, setList] = useState([]);
@@ -37,13 +38,17 @@ const ListComponent = () => {
 
   var createNewList = (list) => {
     return (
-      <div className="!LIST ml-2 bg-gray-50 rounded-sm w-1/4 p-2 drop-shadow-lg ">
+      <div
+        key={list.id}
+        className="!LIST h-fit ml-2 bg-gray-50 rounded-sm w-1/4 p-2 drop-shadow-lg "
+      >
         <input
           type=" text"
           className="bg-gray-50 p-2 text-gray-600 font-bold"
           value={list.title}
         ></input>
-        <AddCard />
+        <Card list={list.id} />
+        <AddCard list={list.id} />
       </div>
     );
   };
