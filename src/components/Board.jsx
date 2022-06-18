@@ -28,6 +28,8 @@ const Board = () => {
           b.push({ ...doc.data(), id: doc.id });
         });
         setBoard(b);
+      } else {
+        setBoard([]);
       }
     });
 

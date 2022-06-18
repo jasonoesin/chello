@@ -1,7 +1,11 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import React from "react";
+import { getAuth, signOut } from "firebase/auth";
+
+const auth = getAuth();
 
 const Navbar = () => {
+  const nav = useNavigate();
   // React.useEffect(() => {
   //   window.onclick = function (event) {
   //     if (!event.target.matches("#dropdown")) {
@@ -131,12 +135,19 @@ const Navbar = () => {
             </a>
           </li>
           <li>
-            <a
-              href="#"
-              className="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+            <button
+              onClick={() => {
+                signOut(auth)
+                  .then(() => {
+                    console.log("Signed Out");
+                    nav("/");
+                  })
+                  .catch((error) => {});
+              }}
+              className="w-full text-left block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
             >
               Sign out
-            </a>
+            </button>
           </li>
         </ul>
       </div>

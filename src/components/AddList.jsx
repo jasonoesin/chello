@@ -16,7 +16,7 @@ const AddList = () => {
 
   return (
     <>
-      <div className="h-16  w-[22rem] flex justify-center">
+      <div className="h-16  w-[19rem] p-2">
         <button
           onClick={addNewList}
           className="p-6 w-full max-w-xs bg-gray-200 rounded-lg border border-gray-200 shadow-md hover:bg-gray-300

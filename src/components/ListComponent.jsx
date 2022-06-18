@@ -40,7 +40,7 @@ const ListComponent = () => {
     return (
       <div
         key={list.id}
-        className="!LIST h-fit ml-2 bg-gray-50 rounded-sm w-1/4 p-2 drop-shadow-lg "
+        className="!LIST h-fit ml-2 mb-2 bg-gray-50 rounded-sm w-1/4 p-2 drop-shadow-lg "
       >
         <input
           type=" text"

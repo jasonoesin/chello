@@ -42,6 +42,8 @@ const Workspace = () => {
               workspaces.push({ ...doc.data(), id: doc.id });
             });
             setWorkSpace(workspaces);
+          } else {
+            setWorkSpace([]);
           }
         });
       } else {
