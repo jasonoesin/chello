@@ -23,6 +23,7 @@ const AddWorkSpace = (props) => {
         name: addForm.wsName.value,
         desc: addForm.wsDesc.value,
         members: [userID],
+        admins: [userID],
       });
       props.onClose();
     });

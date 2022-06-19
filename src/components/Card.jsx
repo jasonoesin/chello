@@ -32,7 +32,10 @@ const Card = (props) => {
 
   const createNewCard = (card) => {
     return (
-      <button className="p-2 w-full text-left bg-white rounded-sm border">
+      <button
+        key={card.id}
+        className="p-2 w-full text-left bg-white rounded-sm border"
+      >
         {card.title}
       </button>
     );

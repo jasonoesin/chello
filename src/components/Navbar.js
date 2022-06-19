@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import React from "react";
 import { getAuth, signOut } from "firebase/auth";
+import NotificationPop from "./NotificationPop";
 
 const auth = getAuth();
 
@@ -30,10 +31,12 @@ const Navbar = () => {
             CHello
           </span>
         </a>
-        <div className="flex items-center md:order-2 mr-12">
+        <div className="flex items-center md:order-2 mr-6">
+          <NotificationPop />
+
           <button
             type="button"
-            className="dropdown dropdown-toggle flex mr-3 text-sm bg-gray-800 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
+            className="ml-8 dropdown dropdown-toggle flex mr-3 text-sm bg-gray-800 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
             id="dropdown"
             aria-expanded="false"
             data-dropdown-toggle="dropdown"
@@ -48,7 +51,7 @@ const Navbar = () => {
           </button>
         </div>
         <div
-          className="hidden justify-between items-center w-full md:flex md:w-auto md:order-1 mr-5"
+          className="ml-10 hidden justify-between items-center w-full md:flex md:w-auto md:order-1"
           id="mobile-menu-2"
         >
           <ul className="flex flex-col mt-4 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium">
@@ -98,7 +101,7 @@ const Navbar = () => {
       </div>
 
       <div
-        className="mr-12 hidden w-64 absolute z-50 my-4 right-4 text-base list-none bg-white border rounded divide-y divide-gray-100 drop-shadow-xl dark:divide-gray-600"
+        className="mr-6 hidden w-64 absolute z-50 my-4 right-4 text-base list-none bg-white border rounded divide-y divide-gray-100 drop-shadow-xl dark:divide-gray-600"
         id="dropdown-menu"
       >
         <div className="py-3 px-4">

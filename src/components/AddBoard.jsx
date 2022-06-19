@@ -2,6 +2,9 @@ import { useState, useRef, useEffect } from "react";
 import { addDoc, collection } from "firebase/firestore";
 import { db } from "../firebase-config";
 import { useParams } from "react-router-dom";
+import { getAuth } from "firebase/auth";
+
+const auth = getAuth();
 
 const AddBoard = () => {
   let [isOpen, setIsOpen] = useState(false);
@@ -31,6 +34,7 @@ const AddBoard = () => {
           title: addForm.title.value,
           desc: addForm.desc.value,
           workspace: params.id,
+          admins: [auth.currentUser.uid],
         });
       });
     }

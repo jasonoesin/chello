@@ -19,7 +19,7 @@ const Register = () => {
         console.log(e.target.email.value);
         addDoc(collection(db, "user"), {
           email: e.target.email.value,
-          uid: cred.user.uid,
+          id: cred.user.uid,
         });
         navigate("/home");
       })
