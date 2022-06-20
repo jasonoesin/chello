@@ -1,9 +1,11 @@
+import GenerateLink from "./GenerateLink";
+
 const InviteWorkspace = (props) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center">
       <div className="bg-white p-10 rounded w-1/3 h-1/10 absolute space-y-3 ">
         <div className="text-xl relative">
-          <div className="relative">Invite to workspace</div>
+          <button className="relative">Invite to workspace</button>
 
           <div className="">
             <svg
@@ -27,9 +29,7 @@ const InviteWorkspace = (props) => {
         />
         <div className="">
           <p>Share this workspace with a link</p>
-          <a className="cursor-pointer text-sm underline underline-offset-2 text-gray-400">
-            Create link
-          </a>
+          <GenerateLink />
         </div>
       </div>
     </div>

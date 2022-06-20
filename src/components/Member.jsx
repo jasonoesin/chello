@@ -24,7 +24,7 @@ const Member = (props) => {
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        getDoc(ref).then((snap) => {
+        onSnapshot(ref, (snap) => {
           if (snap.data() === undefined) {
             return;
           }
@@ -44,10 +44,6 @@ const Member = (props) => {
                 setMember(m);
               });
             });
-            // let test = data.docs.map((doc) => ({
-            //   ...doc.data(),
-            //   id: doc.id,
-            // }));
           });
         });
       } else {

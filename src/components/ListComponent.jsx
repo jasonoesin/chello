@@ -43,9 +43,10 @@ const ListComponent = () => {
         className="!LIST h-fit ml-2 mb-2 bg-gray-50 rounded-sm w-1/4 p-2 drop-shadow-lg "
       >
         <input
+          id="title"
+          value={list.title}
           type=" text"
           className="bg-gray-50 p-2 text-gray-600 font-bold"
-          value={list.title}
         ></input>
         <Card list={list.id} />
         <AddCard list={list.id} />
