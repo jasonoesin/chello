@@ -9,6 +9,9 @@ import {
   onSnapshot,
   query,
   where,
+  setDoc,
+  doc,
+  updateDoc,
 } from "firebase/firestore";
 import { db } from "../firebase-config";
 import { useParams, useLocation, Link } from "react-router-dom";
@@ -45,11 +48,22 @@ const ListComponent = () => {
     curr.current = card;
   };
 
+  const handleChange = (e, list) => {
+    if (e.key === "Enter") {
+      updateDoc(doc(db, "list", list.id), {
+        title: e.target.value,
+      });
+    }
+  };
+
   var createNewList = (list) => {
     return (
       <Fragment key={list.id}>
-        <div className="h-fit ml-2 mb-2 bg-gray-50 rounded-sm w-1/4 p-2 drop-shadow-lg ">
+        <div className="h-fit ml-2 mb-2 bg-gray-50  rounded-sm w-1/4 p-2 shadow-md ">
           <input
+            onKeyDown={(e) => {
+              handleChange(e, list);
+            }}
             id="title"
             defaultValue={list.title}
             type=" text"

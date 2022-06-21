@@ -4,6 +4,31 @@ import { app, db } from "../firebase-config";
 import { addDoc, collection } from "firebase/firestore";
 const auth = getAuth();
 
+const color = () => {
+  return [
+    {
+      name: "",
+      color: "bg-green-400",
+    },
+    {
+      name: "",
+      color: "bg-yellow-400",
+    },
+    {
+      name: "",
+      color: "bg-orange-400",
+    },
+    {
+      name: "",
+      color: "bg-red-400",
+    },
+    {
+      name: "",
+      color: "bg-blue-400",
+    },
+  ];
+};
+
 const Register = () => {
   const navigate = useNavigate();
 
@@ -20,6 +45,7 @@ const Register = () => {
         addDoc(collection(db, "user"), {
           email: e.target.email.value,
           id: cred.user.uid,
+          labels: color(),
         });
         navigate("/home");
       })

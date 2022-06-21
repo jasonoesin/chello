@@ -2,8 +2,17 @@ import { useEffect } from "react";
 import LabelColor from "./LabelColor";
 import { db } from "../firebase-config";
 import { useState } from "react";
-import { doc, onSnapshot } from "firebase/firestore";
+import {
+  arrayUnion,
+  deleteDoc,
+  doc,
+  getDoc,
+  onSnapshot,
+  updateDoc,
+} from "firebase/firestore";
 import { useRef } from "react";
+import LabelRender from "./LabelRender";
+import CheckListRender from "./ChecklistRender";
 
 const CardDetail = (props) => {
   const [data, setData] = useState([]);
@@ -11,6 +20,7 @@ const CardDetail = (props) => {
 
   var ref = useRef();
   var ref2 = useRef();
+  var array = useRef([]);
 
   const colRef = doc(db, "card", props.current.id);
 
@@ -22,16 +32,24 @@ const CardDetail = (props) => {
     return unsub;
   }, []);
 
+  const handleChangeTitle = (e, card) => {
+    if (e.key === "Enter") {
+      updateDoc(doc(db, "card", props.current.id), {
+        title: e.target.value,
+      });
+    }
+  };
+
   return (
     <>
-      <div className="backdrop-blur-sm z-30 inset-0 bg-black bg-opacity-30 h-screen flex justify-center  overflow-y-hidden p-28 fixed">
-        <div className="bg-white p-10 rounded w-2/3 h-[33rem] relative">
+      <div className="backdrop-blur-sm z-30 inset-0 bg-black bg-opacity-30 h-screen flex justify-center  overflow-y-scroll p-28 fixed">
+        <div className="bg-white p-10 rounded w-2/3 min-h-[33rem] h-fit relative">
           <svg
             onClick={() => {
               props.handle("");
             }}
             xmlns="http://www.w3.org/2000/svg"
-            className="h-6 w-6 absolute cursor-pointer left-5 top-5"
+            className="h-6 w-6 absolute cursor-pointer left-4 top-4"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -45,8 +63,13 @@ const CardDetail = (props) => {
           </svg>
           <div className="!DIVIDER flex">
             <div className="!LEFT flex flex-col grow">
-              <p className="p-2 text-2xl">{curr.title}</p>
-
+              <input
+                onKeyDown={(e) => {
+                  handleChangeTitle(e, curr);
+                }}
+                defaultValue={curr.title}
+                className="p-2 text-2xl"
+              ></input>
               {curr.labels ? (
                 <div className="flex">
                   {curr.labels.map((label) => {
@@ -59,16 +82,16 @@ const CardDetail = (props) => {
                   })}
                 </div>
               ) : null}
-
               <p className="p-2 text-md">Card Description</p>
               <div className="p-2">
                 <textarea
                   id="textarea"
-                  className="p-2 focus:outline-none bg-gray-100 resize-none w-full overflow-y-hidden "
+                  className="p-4 focus:outline-none h-32 bg-gray-100 resize-none w-full overflow-y-hidden "
                   type="text"
                   placeholder="Add a more detailed description "
                 />
               </div>
+              <CheckListRender card={props.current.id} />
               <p className="p-2 text-md">Card Comments</p>
             </div>
 
@@ -98,8 +121,54 @@ const CardDetail = (props) => {
               </div>
 
               <div
+                ref={ref}
+                className="hidden z-30 !CLICKED_LABEL bg-white border-gray-50 border rounded drop-shadow-xl h-fit absolute w-64"
+              >
+                <p className="w-full text-center p-3">Labels</p>
+
+                {/* <LabelRender /> */}
+
+                <LabelColor
+                  curr_id={props.current.id}
+                  curr={curr.labels}
+                  color="bg-green-400"
+                />
+                <LabelColor
+                  curr_id={props.current.id}
+                  curr={curr.labels}
+                  color="bg-yellow-400"
+                />
+                <LabelColor
+                  curr_id={props.current.id}
+                  curr={curr.labels}
+                  color="bg-orange-400"
+                />
+                <LabelColor
+                  curr_id={props.current.id}
+                  curr={curr.labels}
+                  color="bg-red-400"
+                />
+                <LabelColor
+                  curr_id={props.current.id}
+                  curr={curr.labels}
+                  color="bg-blue-400"
+                />
+                <div className="py-3 px-2  text-gray-500">
+                  <button
+                    onClick={() => {
+                      ref.current.classList.toggle("hidden");
+                      ref2.current.classList.toggle("hidden");
+                    }}
+                    className="bg-gray-50 w-full rounded h-8 hover:bg-gray-200"
+                  >
+                    Create a new label
+                  </button>
+                </div>
+              </div>
+
+              <div
                 ref={ref2}
-                className=" hidden !CUSTOM_LABEL bg-white border-gray-50 border rounded drop-shadow-xl h-52 absolute  w-64  flex-col  text-xs"
+                className=" hidden z-50 !CUSTOM_LABEL bg-white border-gray-50 border rounded drop-shadow-xl h-52 absolute  w-64  flex-col  text-xs"
               >
                 <svg
                   onClick={() => {
@@ -149,46 +218,65 @@ const CardDetail = (props) => {
               </div>
 
               <div
-                ref={ref}
-                className="hidden !CLICKED_LABEL bg-white border-gray-50 border rounded drop-shadow-xl h-fit absolute w-64"
+                onClick={async () => {
+                  await getDoc(doc(db, "card", props.current.id)).then(
+                    (snap) => {
+                      if (snap.data().checklist)
+                        array.current = snap.data().checklist;
+                      else array.current = [];
+                    }
+                  );
+
+                  array.current.push({
+                    name: "Checklist",
+                    items: [],
+                  });
+
+                  updateDoc(doc(db, "card", props.current.id), {
+                    checklist: array.current,
+                  });
+                }}
+                className="!CHECKLIST relative p-2 mt-2 flex bg-gray-100 rounded-sm hover:bg-gray-200 cursor-pointer"
               >
-                <p className="w-full text-center p-3">Labels</p>
-                <LabelColor
-                  curr_id={props.current.id}
-                  curr={curr.labels}
-                  color="bg-green-400"
-                />
-                <LabelColor
-                  curr_id={props.current.id}
-                  curr={curr.labels}
-                  color="bg-yellow-400"
-                />
-                <LabelColor
-                  curr_id={props.current.id}
-                  curr={curr.labels}
-                  color="bg-orange-400"
-                />
-                <LabelColor
-                  curr_id={props.current.id}
-                  curr={curr.labels}
-                  color="bg-red-400"
-                />
-                <LabelColor
-                  curr_id={props.current.id}
-                  curr={curr.labels}
-                  color="bg-blue-400"
-                />
-                <div className="py-3 px-2  text-gray-500">
-                  <button
-                    onClick={() => {
-                      ref.current.classList.toggle("hidden");
-                      ref2.current.classList.toggle("hidden");
-                    }}
-                    className="bg-gray-50 w-full rounded h-8 hover:bg-gray-200"
-                  >
-                    Create a new label
-                  </button>
-                </div>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"
+                  />
+                </svg>
+                <p className="ml-2">Checklist</p>
+              </div>
+
+              <div
+                onClick={() => {
+                  props.handle("");
+                  deleteDoc(doc(db, "card", props.current.id));
+                }}
+                className="!ARCHIVE relative p-2 mt-2 flex bg-gray-100 rounded-sm hover:bg-gray-200 cursor-pointer"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"
+                  />
+                </svg>
+                <p className="ml-2">Archive</p>
               </div>
             </div>
           </div>
