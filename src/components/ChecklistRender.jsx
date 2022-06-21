@@ -1,5 +1,5 @@
 import { doc, onSnapshot } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { db } from "../firebase-config";
 
 const CheckListRender = (props) => {
@@ -21,7 +21,7 @@ const CheckListRender = (props) => {
       <div className="flex flex-col">
         {checklists.map(({ name }) => {
           return (
-            <>
+            <Fragment key={name}>
               <div className="mt-1 px-3 flex items-center">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -38,7 +38,7 @@ const CheckListRender = (props) => {
                   />
                 </svg>
                 <p className="p-3 grow">{name}</p>
-                <button className="px-4 py-1 bg-blue-400 rounded text-gray-200">
+                <button className="px-4 py-1 bg-blue-400 rounded text-white">
                   Delete
                 </button>
               </div>
@@ -49,7 +49,7 @@ const CheckListRender = (props) => {
                   Add an Item
                 </button>
               </div>
-            </>
+            </Fragment>
           );
         })}
       </div>

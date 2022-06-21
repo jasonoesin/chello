@@ -13,8 +13,16 @@ import {
 import { useRef } from "react";
 import LabelRender from "./LabelRender";
 import CheckListRender from "./ChecklistRender";
+import React from "react";
+import { useQuill } from "react-quilljs";
+import "quill/dist/quill.snow.css";
 
 const CardDetail = (props) => {
+  const modules = {
+    toolbar: [["bold", "italic", "underline", "strike"]],
+  };
+
+  const { quill, quillRef } = useQuill({ modules });
   const [data, setData] = useState([]);
   var curr = data;
 
@@ -32,13 +40,43 @@ const CardDetail = (props) => {
     return unsub;
   }, []);
 
-  const handleChangeTitle = (e, card) => {
+  const handleChangeTitle = (e) => {
     if (e.key === "Enter") {
       updateDoc(doc(db, "card", props.current.id), {
         title: e.target.value,
       });
     }
   };
+
+  const handleChangeDesc = (e) => {
+    if (e.key === "Enter") {
+      updateDoc(doc(db, "card", props.current.id), {
+        desc: e.target.value,
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (quill) {
+      quill.clipboard.dangerouslyPasteHTML(
+        curr.desc ? curr.desc : "Add a more detailed description"
+      );
+    }
+  });
+
+  useEffect(() => {
+    if (quill) {
+      quill.on("text-change", (e) => {
+        // console.log(quill.root.innerHTML);
+        // console.log(quillRef.current.firstChild.innerHTML);
+        if (e.ops[1].insert && e.ops[1].insert === "\n") {
+          updateDoc(doc(db, "card", props.current.id), {
+            desc: quill.root.innerHTML,
+          });
+        }
+      });
+    }
+  }, [quill]);
 
   return (
     <>
@@ -49,7 +87,7 @@ const CardDetail = (props) => {
               props.handle("");
             }}
             xmlns="http://www.w3.org/2000/svg"
-            className="h-6 w-6 absolute cursor-pointer left-4 top-4"
+            className="h-6 w-6 absolute cursor-pointer right-4 top-4"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -83,14 +121,19 @@ const CardDetail = (props) => {
                 </div>
               ) : null}
               <p className="p-2 text-md">Card Description</p>
-              <div className="p-2">
+              <div className="mb-12" style={{ width: "100%", height: 150 }}>
+                <div className="bg-gray-100 " ref={quillRef} />
+              </div>
+              {/* <div className="p-2">
                 <textarea
+                  onKeyDown={handleChangeDesc}
                   id="textarea"
                   className="p-4 focus:outline-none h-32 bg-gray-100 resize-none w-full overflow-y-hidden "
                   type="text"
-                  placeholder="Add a more detailed description "
+                  defaultValue={curr.desc ? curr.desc : null}
+                  placeholder={"Add a more detailed description"}
                 />
-              </div>
+              </div> */}
               <CheckListRender card={props.current.id} />
               <p className="p-2 text-md">Card Comments</p>
             </div>
