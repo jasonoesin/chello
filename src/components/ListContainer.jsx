@@ -1,4 +1,5 @@
 import AddList from "./AddList";
+import CardDetail from "./CardDetail";
 import ListComponent from "./ListComponent";
 
 const ListContainer = () => {

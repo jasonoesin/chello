@@ -1,5 +1,5 @@
 import AddCard from "./AddCard";
-import { useEffect } from "react";
+import { Fragment, useEffect, useRef } from "react";
 import { useState } from "react";
 import {
   getFirestore,
@@ -13,12 +13,16 @@ import {
 import { db } from "../firebase-config";
 import { useParams, useLocation, Link } from "react-router-dom";
 import Card from "./Card";
+import CardDetail from "./CardDetail";
 
 const ListComponent = () => {
   const [lists, setList] = useState([]);
+  const [detail, setDetail] = useState("");
   const colRef = collection(db, "list");
   const params = useParams();
   const location = useLocation();
+
+  const curr = useRef("");
 
   useEffect(() => {
     const q = query(colRef, where("board", "==", params.id));
@@ -36,21 +40,33 @@ const ListComponent = () => {
     return snaps;
   }, [location]);
 
+  const handleClickCard = (id, card) => {
+    setDetail(id);
+    curr.current = card;
+  };
+
   var createNewList = (list) => {
     return (
-      <div
-        key={list.id}
-        className="!LIST h-fit ml-2 mb-2 bg-gray-50 rounded-sm w-1/4 p-2 drop-shadow-lg "
-      >
-        <input
-          id="title"
-          value={list.title}
-          type=" text"
-          className="bg-gray-50 p-2 text-gray-600 font-bold"
-        ></input>
-        <Card list={list.id} />
-        <AddCard list={list.id} />
-      </div>
+      <Fragment key={list.id}>
+        <div className="h-fit ml-2 mb-2 bg-gray-50 rounded-sm w-1/4 p-2 drop-shadow-lg ">
+          <input
+            id="title"
+            defaultValue={list.title}
+            type=" text"
+            className="bg-gray-50 p-2 text-gray-600 font-bold"
+          ></input>
+          <Card list={list.id} handle={handleClickCard} />
+          <AddCard list={list.id} />
+        </div>
+
+        {list.id === detail ? (
+          <CardDetail
+            current={curr.current}
+            hidden="false"
+            handle={handleClickCard}
+          />
+        ) : null}
+      </Fragment>
     );
   };
 

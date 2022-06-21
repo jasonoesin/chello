@@ -9,6 +9,8 @@ import {
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { db } from "../firebase-config";
+import CardDetail from "./CardDetail";
+import { Fragment } from "react";
 
 const Card = (props) => {
   const [cards, setCard] = useState([]);
@@ -32,12 +34,29 @@ const Card = (props) => {
 
   const createNewCard = (card) => {
     return (
-      <button
-        key={card.id}
-        className="p-2 w-full text-left bg-white rounded-sm border"
-      >
-        {card.title}
-      </button>
+      <Fragment key={card.id}>
+        <button
+          onClick={() => {
+            props.handle(props.list, card);
+          }}
+          className="p-2 w-full text-left bg-white rounded-sm border"
+        >
+          {card.labels ? (
+            <div className="flex flex-wrap">
+              {card.labels.map((label) => {
+                return (
+                  <div
+                    key={card.id + label}
+                    className={`h-2 w-10 ${label} rounded-md mt-1 ml-1`}
+                  ></div>
+                );
+              })}
+            </div>
+          ) : null}
+
+          {card.title}
+        </button>
+      </Fragment>
     );
   };
 
