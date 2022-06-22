@@ -15,16 +15,17 @@ import {
 import { db } from "../firebase-config";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { Link, useParams } from "react-router-dom";
+import { UserAuth } from "../middleware/AuthContext";
 
 const auth = getAuth();
-
-var curr = "-";
 
 const Workspace = (props) => {
   const param = useParams();
   const [workspaceList, setWorkSpace] = useState([]);
   const [dropDown, setDropDown] = useState(param.id);
   const colRef = collection(db, "workspace");
+
+  const { user } = UserAuth();
 
   useEffect(() => {
     // const getWorkSpaces = async () => {
@@ -33,30 +34,26 @@ const Workspace = (props) => {
     // };
     // getWorkSpaces();
 
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        curr = user.uid;
+    if (user.uid !== undefined) {
+      const q = query(
+        colRef,
+        where("members", "array-contains", auth.currentUser.uid)
+      );
 
-        const q = query(
-          colRef,
-          where("members", "array-contains", auth.currentUser.uid)
-        );
-
-        onSnapshot(q, (snapshot) => {
-          if (!snapshot.empty) {
-            let workspaces = [];
-            snapshot.docs.forEach((doc) => {
-              workspaces.push({ ...doc.data(), id: doc.id });
-            });
-            setWorkSpace(workspaces);
-          } else {
-            setWorkSpace([]);
-          }
-        });
-      } else {
-      }
-    });
-  }, []);
+      onSnapshot(q, (snapshot) => {
+        if (!snapshot.empty) {
+          let workspaces = [];
+          snapshot.docs.forEach((doc) => {
+            workspaces.push({ ...doc.data(), id: doc.id });
+          });
+          setWorkSpace(workspaces);
+        } else {
+          setWorkSpace([]);
+        }
+      });
+    } else {
+    }
+  }, [user]);
 
   return (
     <div className="space-y-0.5">
@@ -77,7 +74,9 @@ const Workspace = (props) => {
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke={
-                    workspace.admins.includes(curr) ? "#60a5fa" : "currentColor"
+                    workspace.admins.includes(user.uid)
+                      ? "#60a5fa"
+                      : "currentColor"
                   }
                   strokeWidth={2}
                 >

@@ -23,10 +23,12 @@ import ProtectedRoute from "./middleware/ProtectedRoute";
 
 const NavLayout = () => {
   return (
-    <div className="absolute w-screen w-max-screen">
-      <Navbar />
+    <>
+      <div className="absolute w-screen w-max-screen">
+        <Navbar />
+      </div>
       <Outlet />
-    </div>
+    </>
   );
 };
 
