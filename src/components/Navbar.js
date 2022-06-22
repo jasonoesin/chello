@@ -44,8 +44,8 @@ const Navbar = () => {
             // onBlur={closeDropdown}
           >
             <img
-              className="w-8 h-8 rounded-full"
-              src="https://i.picsum.photos/id/66/200/200.jpg?hmac=gaKXe-rWmo5fSEm79TTkW_yFJLECw3FdRCh6Dm7jp4g"
+              className="w-8 h-8 rounded-full border border-gray-300"
+              src="https://www.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png"
               alt="user photo"
             />
           </button>

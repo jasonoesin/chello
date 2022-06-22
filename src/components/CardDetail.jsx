@@ -16,6 +16,8 @@ import CheckListRender from "./ChecklistRender";
 import React from "react";
 import { useQuill } from "react-quilljs";
 import "quill/dist/quill.snow.css";
+import CardFileAttach from "./CardFileAttach";
+import CardLink from "./CardLink";
 
 const CardDetail = (props) => {
   const modules = {
@@ -135,6 +137,7 @@ const CardDetail = (props) => {
                 />
               </div> */}
               <CheckListRender card={props.current.id} />
+              <CardFileAttach card={props.current.id} />
               <p className="p-2 text-md">Card Comments</p>
             </div>
 
@@ -321,6 +324,8 @@ const CardDetail = (props) => {
                 </svg>
                 <p className="ml-2">Archive</p>
               </div>
+
+              <CardLink card={props.current.id} />
             </div>
           </div>
         </div>

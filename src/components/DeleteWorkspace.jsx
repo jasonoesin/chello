@@ -65,7 +65,6 @@ const DeleteWorkspace = () => {
                 <button
                   onClick={() => {
                     deleteDoc(doc(db, "workspace", params.id));
-
                     nav("/home");
                   }}
                   className="mt-10 w-full flex justify-center 

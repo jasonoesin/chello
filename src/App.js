@@ -31,12 +31,13 @@ function App() {
 
   return (
     <div className="absolute w-screen">
+      {/* ----------------------CONTENT----------------------- */}
       <div className="absolute w-screen w-max-screen">
         <Navbar />
       </div>
-      {/* ----------------------CONTENT----------------------- */}
       <Routes>
         <Route path="*" element={<Layout />} />
+
         <Route
           path="/invite-workspace/:id"
           element={
