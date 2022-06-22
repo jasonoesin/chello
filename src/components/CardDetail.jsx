@@ -18,6 +18,7 @@ import { useQuill } from "react-quilljs";
 import "quill/dist/quill.snow.css";
 import CardFileAttach from "./CardFileAttach";
 import CardLink from "./CardLink";
+import CommentRenderer from "./CommentRenderer";
 
 const CardDetail = (props) => {
   const modules = {
@@ -122,8 +123,8 @@ const CardDetail = (props) => {
                   })}
                 </div>
               ) : null}
-              <p className="p-2 text-md">Card Description</p>
-              <div className="mb-12" style={{ width: "100%", height: 150 }}>
+              <p className="p-2 text-md font-medium">Card Description</p>
+              <div className="mb-12" style={{ width: "100%", height: 125 }}>
                 <div className="bg-gray-100 " ref={quillRef} />
               </div>
               {/* <div className="p-2">
@@ -138,10 +139,10 @@ const CardDetail = (props) => {
               </div> */}
               <CheckListRender card={props.current.id} />
               <CardFileAttach card={props.current.id} />
-              <p className="p-2 text-md">Card Comments</p>
+              <CommentRenderer card={props.current.id} />
             </div>
 
-            <div className="ml-8 !RIGHT w-40 text-sm text-gray-600">
+            <div className="ml-8 !RIGHT w-40 text-sm text-gray-600  ">
               <p className="p-2"> Add to Card</p>
               <div
                 onClick={() => {

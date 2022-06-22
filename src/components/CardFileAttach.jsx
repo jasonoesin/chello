@@ -26,7 +26,6 @@ const CardFileAttach = (props) => {
     uploadBytes(imageRef, fileUpload).then(() => {
       alert("File Uploaded");
       setRefresh(!needRefresh);
-      setfileUpload(null);
     });
   };
 
@@ -46,7 +45,7 @@ const CardFileAttach = (props) => {
 
   return (
     <div className="relative">
-      <p className="p-2 ">Card Attachments</p>
+      <p className="p-2 font-medium">Card Attachments</p>
 
       {
         <div className="flex flex-col">

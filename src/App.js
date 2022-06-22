@@ -16,6 +16,7 @@ import WorkspaceSettings from "./pages/WorkspaceSettings";
 import Workspace from "./components/Workspace";
 import WorkspacePage from "./pages/WorkspacePage";
 import BoardPage from "./pages/BoardPage";
+import CardLinkPage from "./pages/CardLinkPage";
 
 const Layout = () => (
   <div className="min-h-screen bg-grey-50 flex flex-col justify-center">
@@ -48,6 +49,7 @@ function App() {
         />
         <Route path="/workspace/:id" element={<WorkspacePage />} />
         <Route path="/workspace/:id/settings" element={<WorkspaceSettings />} />
+        <Route path="/card/:id/" element={<CardLinkPage />} />
         <Route path="/board/:id/" element={<BoardPage />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/home" element={<Home />} />
