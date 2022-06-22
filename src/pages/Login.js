@@ -67,7 +67,7 @@ const Login = () => {
           <div className="bg-gray-400 w-full h-0.5 rounded"></div>
 
           <p className="text-sm flex flex-row text-gray-400">
-            Already have an account ?
+            Don't have an account ?
             <Link
               to={"/register"}
               className="ml-1 text-blue-600 cursor-pointer "

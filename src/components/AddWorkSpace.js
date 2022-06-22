@@ -24,6 +24,7 @@ const AddWorkSpace = (props) => {
         desc: addForm.wsDesc.value,
         members: [userID],
         admins: [userID],
+        visibility: "private",
       });
       props.onClose();
     });

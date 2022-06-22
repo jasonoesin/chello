@@ -46,7 +46,9 @@ const CommentRenderer = (props) => {
         </form>
       </div>
       {comments.map(({ comment, user }) => {
-        return <Comment comment={comment} user_ref={user} />;
+        return (
+          <Comment key={comment + user} comment={comment} user_ref={user} />
+        );
       })}
     </>
   );
