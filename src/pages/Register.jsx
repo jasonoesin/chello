@@ -1,7 +1,7 @@
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { Link, useNavigate } from "react-router-dom";
 import { app, db } from "../firebase-config";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, doc, setDoc } from "firebase/firestore";
 const auth = getAuth();
 
 const color = () => {
@@ -52,7 +52,7 @@ const Register = () => {
       .then((cred) => {
         // Signed in
         console.log(e.target.email.value);
-        addDoc(collection(db, "user"), {
+        setDoc(doc(db, "user", cred.user.uid), {
           email: e.target.email.value,
           id: cred.user.uid,
           name: e.target.name.value,

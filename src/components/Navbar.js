@@ -2,10 +2,13 @@ import { Link, useNavigate } from "react-router-dom";
 import React from "react";
 import { getAuth, signOut } from "firebase/auth";
 import NotificationPop from "./NotificationPop";
+import { UserAuth } from "../middleware/AuthContext";
 
 const auth = getAuth();
 
 const Navbar = () => {
+  const { user, userData } = UserAuth();
+
   const nav = useNavigate();
   // React.useEffect(() => {
   //   window.onclick = function (event) {
@@ -22,6 +25,8 @@ const Navbar = () => {
   function func() {
     document.getElementById("dropdown-menu").classList.toggle("hidden");
   }
+
+  // belum ada data
 
   return (
     <nav className="bg-white border-gray-200 px-2 sm:px-4 py-2.5 rounded dark:bg-gray-800 border-b">
@@ -106,10 +111,10 @@ const Navbar = () => {
       >
         <div className="py-3 px-4">
           <span className="block text-sm text-gray-900 dark:text-white">
-            Name
+            {userData.name}
           </span>
           <span className="block text-sm font-medium text-gray-500 truncate dark:text-gray-400">
-            name@gmail.com
+            {userData.email}
           </span>
         </div>
         <ul className="py-1" aria-labelledby="dropdown">
