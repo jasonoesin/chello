@@ -15,7 +15,9 @@ const Comment = ({ comment, user_ref }) => {
 
   return (
     <>
-      <div className="px-3 font-semibold text-blue-500">{state.email}</div>
+      <div className="px-3 font-semibold text-blue-500">
+        {state ? state.email : null}
+      </div>
       <div className="text-sm mb-4 mt-1 w-full text-gray-700 border-gray-200 border-2 rounded-md px-3 py-1">
         {comment}
       </div>

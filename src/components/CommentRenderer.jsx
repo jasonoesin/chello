@@ -10,7 +10,7 @@ const CommentRenderer = (props) => {
 
   useEffect(() => {
     onSnapshot(colRef, (snap) => {
-      if (snap) {
+      if (snap.data().comments) {
         setComments(snap.data().comments);
       } else setComments([]);
     });
@@ -32,11 +32,6 @@ const CommentRenderer = (props) => {
       {comments.map(({ comment, user }) => {
         return <Comment comment={comment} user_ref={user} />;
       })}
-
-      <div className="px-3 font-semibold text-blue-500">User Name</div>
-      <div className="text-sm mb-4 mt-1 w-full text-gray-700 border-gray-200 border-2 rounded-md px-3 py-1">
-        Comment Test
-      </div>
     </>
   );
 };
