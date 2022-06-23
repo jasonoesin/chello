@@ -84,7 +84,7 @@ const WorkspaceSettings = () => {
 
           <p className="font-bold">Members</p>
 
-          <Member />
+          <Member isMember={isMember} />
 
           {isMember ? <LeaveWorkspace user={value} /> : <DeleteWorkspace />}
         </div>

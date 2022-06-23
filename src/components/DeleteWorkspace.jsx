@@ -22,14 +22,16 @@ const DeleteWorkspace = () => {
 
   return (
     <>
-      <button
-        onClick={() => {
-          setModal(true);
-        }}
-        className=" text-left underline text-red-600 underline-offset-4 cursor-pointer"
-      >
-        Delete Workspace
-      </button>
+      <div className=" text-left underline text-red-600 underline-offset-4 ">
+        <p
+          onClick={() => {
+            setModal(true);
+          }}
+          className="w-fit cursor-pointer m-0"
+        >
+          Delete Workspace
+        </p>
+      </div>
 
       {modal ? (
         <div

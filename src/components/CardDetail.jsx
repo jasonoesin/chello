@@ -51,14 +51,6 @@ const CardDetail = (props) => {
     }
   };
 
-  const handleChangeDesc = (e) => {
-    if (e.key === "Enter") {
-      updateDoc(doc(db, "card", props.current.id), {
-        desc: e.target.value,
-      });
-    }
-  };
-
   useEffect(() => {
     if (quill) {
       quill.clipboard.dangerouslyPasteHTML(
