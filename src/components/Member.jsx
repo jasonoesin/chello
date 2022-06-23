@@ -41,7 +41,6 @@ const Member = (props) => {
           const qSnap = await getDoc(q);
 
           if (qSnap.data().id === user.uid) {
-            console.log(member);
             m.unshift({
               email: qSnap.data().name,
               id: qSnap.data().id,

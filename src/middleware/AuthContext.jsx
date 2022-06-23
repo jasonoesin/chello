@@ -19,6 +19,7 @@ export const AuthContextProvider = ({ children }) => {
 
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       console.log(currentUser);
+      if (currentUser === null) return;
       setUser(currentUser);
 
       getData = onSnapshot(doc(db, "user", currentUser.uid), (s) => {
@@ -27,7 +28,6 @@ export const AuthContextProvider = ({ children }) => {
     });
     return () => {
       unsubscribe();
-      getData();
     };
   }, []);
 

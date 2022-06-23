@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import NotificationComponent from "./NotificationComponent";
 
 const NotificationPop = () => {
   let [isOpen, setIsOpen] = useState(false);
@@ -37,22 +38,27 @@ const NotificationPop = () => {
       </div>
 
       {isOpen ? (
-        <div
-          ref={menuRef}
-          className="mt-[29rem] w-[28rem] h-[24rem] absolute z-50 my-4 right-1 text-base list-none bg-white border rounded divide-y divide-gray-100 drop-shadow-xl dark:divide-gray-600"
-          id="dropdown-menu"
-        >
-          <div className="py-3 px-4">
-            <span className="block text-sm font-bold text-gray-900 dark:text-white">
-              Notifications
-            </span>
-          </div>
-          <hr className="" />
+        <>
+          <div
+            ref={menuRef}
+            className="overflow-y-scroll mt-[29rem] w-[28rem] h-[24rem] absolute z-50 my-4 right-1 text-base list-none bg-white border rounded divide-y divide-gray-100 drop-shadow-xl dark:divide-gray-600"
+            id="dropdown-menu"
+          >
+            <div className="relative h-full">
+              <div className="py-3 px-4">
+                <span className="block text-sm font-bold text-gray-900 dark:text-white">
+                  Notifications
+                </span>
+              </div>
+              <hr className="" />
 
-          <div className="py-3 px-4 absolute bottom-2 text-sm">
-            Change notification email frequency
+              <NotificationComponent />
+              <div className="underline cursor-pointer py-3 px-4 sticky bottom-0 text-sm bg-white w-full">
+                Change notification email frequency
+              </div>
+            </div>
           </div>
-        </div>
+        </>
       ) : null}
     </>
   );
