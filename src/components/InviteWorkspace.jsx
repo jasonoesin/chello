@@ -1,6 +1,35 @@
+import { useEffect } from "react";
 import GenerateLink from "./GenerateLink";
 
+import { useState } from "react";
+import { db } from "../firebase-config";
+import { collection, onSnapshot } from "firebase/firestore";
+import Select from "react-select";
+
 const InviteWorkspace = (props) => {
+  const [options, setOptions] = useState([]);
+  const colRef = collection(db, "user");
+
+  useEffect(() => {
+    const snaps = onSnapshot(colRef, (snapshot) => {
+      if (!snapshot.empty) {
+        let b = [];
+        snapshot.docs.forEach((doc) => {
+          b.push({
+            value: doc.data().id,
+            label: doc.data().email,
+          });
+        });
+
+        setOptions(b);
+      } else {
+        setOptions([]);
+      }
+    });
+
+    return snaps;
+  }, []);
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center">
       <div className="bg-white p-10 rounded w-1/3 h-1/10 absolute space-y-3 ">
@@ -22,11 +51,7 @@ const InviteWorkspace = (props) => {
             </svg>
           </div>
         </div>
-        <input
-          className="w-full h-1/2 border-gray-300 border rounded-sm border-2 p-2"
-          type="text"
-          placeholder="Email address or name"
-        />
+        <Select options={options} />
         <div className="">
           <p>Share this workspace with a link</p>
           <GenerateLink />

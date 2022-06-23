@@ -1,11 +1,12 @@
 import AddBoard from "./AddBoard";
 import Board from "./Board";
 
-const BoardContainer = () => {
+const BoardContainer = (props) => {
   return (
     <div className="flex flex-wrap ">
       <Board />
-      <AddBoard />
+
+      {props.isMember ? <AddBoard /> : null}
     </div>
   );
 };

@@ -1,5 +1,5 @@
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, onSnapshot } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import DeleteWorkspace from "../components/DeleteWorkspace";
@@ -8,13 +8,14 @@ import LeaveWorkspace from "../components/LeaveWorkspace";
 import Member from "../components/Member";
 import Notification from "../components/Notification";
 import { db } from "../firebase-config";
+import { UserAuth } from "../middleware/AuthContext";
+import Select from "react-select";
 
 const auth = getAuth();
 
 const WorkspaceSettings = () => {
   const [showModal, setShowModal] = useState(false);
   const [isMember, setIsMember] = useState(true);
-  const [value, setValue] = useState(null);
   const params = useParams();
 
   const ref = doc(db, "workspace", params.id);
@@ -23,22 +24,22 @@ const WorkspaceSettings = () => {
     setShowModal(false);
   }
 
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setValue(user.uid);
-        getDoc(ref).then((snap) => {
-          if (snap.data() === undefined) {
-            return;
-          }
+  const { user, nav } = UserAuth();
 
-          if (snap.data().admins.includes(user.uid)) {
-            setIsMember(false);
-          }
-        });
-      }
-    });
-  });
+  useEffect(() => {
+    if (user.uid) {
+      getDoc(ref).then((snap) => {
+        if (snap.data() === undefined) {
+          return;
+        }
+
+        if (!snap.data().members.includes(user.uid)) nav("/home");
+        if (snap.data().admins.includes(user.uid)) {
+          setIsMember(false);
+        }
+      });
+    }
+  }, [user]);
 
   return (
     <div className="mt-24 w-screen h-fit">
@@ -86,7 +87,7 @@ const WorkspaceSettings = () => {
 
           <Member isMember={isMember} />
 
-          {isMember ? <LeaveWorkspace user={value} /> : <DeleteWorkspace />}
+          {isMember ? <LeaveWorkspace user={user.uid} /> : <DeleteWorkspace />}
         </div>
       </div>
 

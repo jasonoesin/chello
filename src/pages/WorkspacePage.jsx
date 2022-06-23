@@ -1,6 +1,6 @@
 import { doc, onSnapshot } from "firebase/firestore";
-import { useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useLocation, useParams } from "react-router-dom";
 import AddWorkSpace from "../components/AddWorkSpace";
 import BoardContainer from "../components/BoardContainer";
 import Sidebar from "../components/Sidebar";
@@ -13,6 +13,8 @@ const WorkspacePage = () => {
 
   const { user, nav } = UserAuth();
   const q = doc(db, "workspace", params.id);
+  const [state, setState] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     onSnapshot(q, (s) => {
@@ -24,9 +26,13 @@ const WorkspacePage = () => {
           console.log("Not Eligible to See Workspace");
           nav("/home");
         }
+
+        if (s.data().members.includes(user.uid)) {
+          setState(true);
+        }
       }
     });
-  }, [user]);
+  }, [user, location]);
 
   return (
     <div className="">
@@ -39,7 +45,7 @@ const WorkspacePage = () => {
             </div>
           </div>
           <div className="pl-64">
-            <BoardContainer />
+            <BoardContainer isMember={state} />
           </div>
         </div>
       </div>

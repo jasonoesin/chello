@@ -1,5 +1,6 @@
 import AddWorkSpace from "../components/AddWorkSpace";
 import BoardContainer from "../components/BoardContainer";
+import HomeComponent from "../components/HomeComponent";
 import Sidebar from "../components/Sidebar";
 import Workspace from "../components/Workspace";
 
@@ -14,7 +15,9 @@ const Home = () => {
               <Workspace />
             </div>
           </div>
-          <div className="pl-64">{/* <BoardContainer /> */}</div>
+          <div className="pl-64">
+            <HomeComponent />
+          </div>
         </div>
       </div>
     </div>
