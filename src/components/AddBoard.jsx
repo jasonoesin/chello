@@ -35,6 +35,7 @@ const AddBoard = () => {
           desc: addForm.desc.value,
           workspace: params.id,
           admins: [auth.currentUser.uid],
+          visibility: "private",
         });
       });
     }
