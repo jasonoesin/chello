@@ -10,6 +10,7 @@ import {
 import { storage } from "../firebase-config";
 import { useEffect } from "react";
 import { useRef } from "react";
+import { toast } from "react-toastify";
 
 const CardFileAttach = (props) => {
   const [fileUpload, setfileUpload] = useState(null);
@@ -24,7 +25,22 @@ const CardFileAttach = (props) => {
       `card-attachments/${props.card}/${fileUpload.name}`
     );
     uploadBytes(imageRef, fileUpload).then(() => {
-      alert("File Uploaded");
+      toast.success("Successfully Attached File !", {
+        position: "bottom-right",
+
+        autoClose: 3500,
+
+        hideProgressBar: false,
+
+        closeOnClick: true,
+
+        pauseOnHover: true,
+
+        draggable: true,
+
+        progress: undefined,
+      });
+
       setRefresh(!needRefresh);
     });
   };
@@ -70,21 +86,24 @@ const CardFileAttach = (props) => {
                     {file}
                   </a>
                 </div>
-                <button
-                  onClick={() => {
-                    const deleteRef = ref(
-                      storage,
-                      `card-attachments/${props.card}/${file}`
-                    );
 
-                    deleteObject(deleteRef).then(() => {
-                      setRefresh(!needRefresh);
-                    });
-                  }}
-                  className="underline mt-2 w-1/3 text-gray-600 hover:text-gray-800 text-xs ml-5 rounded-xl"
-                >
-                  Detach File
-                </button>
+                {props.isMember ? (
+                  <button
+                    onClick={() => {
+                      const deleteRef = ref(
+                        storage,
+                        `card-attachments/${props.card}/${file}`
+                      );
+
+                      deleteObject(deleteRef).then(() => {
+                        setRefresh(!needRefresh);
+                      });
+                    }}
+                    className="underline mt-2 w-1/3 text-gray-600 hover:text-gray-800 text-xs ml-5 rounded-xl"
+                  >
+                    Detach File
+                  </button>
+                ) : null}
               </div>
             );
           })}

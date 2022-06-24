@@ -19,12 +19,12 @@ import "quill/dist/quill.snow.css";
 import CardFileAttach from "./CardFileAttach";
 import CardLink from "./CardLink";
 import CommentRenderer from "./CommentRenderer";
+import DueDate from "./DueDate";
 
 const CardDetail = (props) => {
   const modules = {
     toolbar: [["bold", "italic", "underline", "strike"]],
   };
-
   const { quill, quillRef } = useQuill({ modules });
   const [data, setData] = useState([]);
   var curr = data;
@@ -73,6 +73,8 @@ const CardDetail = (props) => {
 
   const desc = data.desc;
 
+  let opt = { weekday: "long", year: "numeric", month: "long", day: "numeric" };
+
   return (
     <>
       <div className="backdrop-blur-sm z-30 inset-0 bg-black bg-opacity-30 h-screen flex justify-center  overflow-y-scroll p-28 fixed">
@@ -108,6 +110,15 @@ const CardDetail = (props) => {
                 <div className="p-2 text-2xl">{curr.title}</div>
               )}
 
+              {data.duedate && (
+                <div className="absolute text-sm font-medium right-[14.5rem] top-[2.5rem] px-4 py-1 bg-gray-100 rounded">
+                  <div>Due Date</div>
+                  <p>
+                    {new Date(data.duedate).toLocaleTimeString("en-US", opt)}
+                  </p>
+                </div>
+              )}
+
               {curr.labels ? (
                 <div className="flex">
                   {curr.labels.map((label) => {
@@ -121,7 +132,6 @@ const CardDetail = (props) => {
                 </div>
               ) : null}
               <p className="p-2 text-md font-medium">Card Description</p>
-
               {props.isMember ? (
                 <div className="mb-12" style={{ width: "100%", height: 125 }}>
                   <div className="bg-gray-100 " ref={quillRef} />
@@ -135,7 +145,6 @@ const CardDetail = (props) => {
                   )}
                 </p>
               )}
-
               {/* <div className="p-2">
                 <textarea
                   onKeyDown={handleChangeDesc}
@@ -343,6 +352,7 @@ const CardDetail = (props) => {
                 </div>
 
                 <CardLink card={props.current.id} />
+                <DueDate card={props.current.id} />
               </div>
             ) : null}
           </div>

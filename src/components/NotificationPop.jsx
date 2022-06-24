@@ -6,11 +6,16 @@ const NotificationPop = () => {
   let [isOpen, setIsOpen] = useState(false);
 
   let menuRef = useRef();
+  let svgRef = useRef();
 
   useEffect(() => {
     let handler = (e) => {
-      if (menuRef.current == null) return;
-      if (!menuRef.current.contains(e.target)) setIsOpen(false);
+      if (!menuRef.current) return;
+
+      if (svgRef.current.contains(e.target)) return;
+
+      if (menuRef.current.contains(e.target)) return;
+      setIsOpen(false);
     };
     document.addEventListener("mousedown", handler);
     return () => {
@@ -20,7 +25,13 @@ const NotificationPop = () => {
 
   return (
     <>
-      <div onClick={() => setIsOpen(true)} className="h-full">
+      <div
+        ref={svgRef}
+        onClick={() => {
+          setIsOpen((isOpen) => !isOpen);
+        }}
+        className="h-full"
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           className="h-6 w-6 hover:bg-gray-200 cursor-pointer"
