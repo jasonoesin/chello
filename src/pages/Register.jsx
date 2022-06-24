@@ -58,6 +58,11 @@ const Register = () => {
           name: e.target.name.value,
           labels: color(),
         });
+
+        setDoc(doc(db, "notification", cred.user.uid), {
+          invite: [],
+        });
+
         navigate("/home");
       })
       .catch((error) => {

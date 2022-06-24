@@ -1,10 +1,18 @@
 import { data } from "autoprefixer";
-import { arrayRemove, doc, getDoc, updateDoc } from "firebase/firestore";
+import {
+  arrayRemove,
+  arrayUnion,
+  doc,
+  getDoc,
+  updateDoc,
+} from "firebase/firestore";
 import { useState } from "react";
 import { useEffect } from "react";
 import { db } from "../firebase-config";
 import { UserAuth } from "../middleware/AuthContext";
 import { GetNotif } from "../notification/NotifContext";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const NotificationComponent = () => {
   const [wslist, setWslist] = useState([]);
@@ -32,9 +40,44 @@ const NotificationComponent = () => {
 
   const handleAcc = (ws) => {
     const colRef = doc(db, "notification", user.uid);
-    console.log(ws.id);
     updateDoc(colRef, {
       invite: arrayRemove({ workspace: ws.id }),
+    });
+
+    var workspaceRef = doc(db, "workspace", ws.id);
+
+    console.log("masuk");
+
+    if (workspaceRef)
+      updateDoc(workspaceRef, {
+        members: arrayUnion(user.uid),
+      });
+
+    toast.success("Successfully Joined Workspace !", {
+      position: "bottom-right",
+      autoClose: 3500,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  };
+
+  const handleDec = (ws) => {
+    const colRef = doc(db, "notification", user.uid);
+    updateDoc(colRef, {
+      invite: arrayRemove({ workspace: ws.id }),
+    });
+
+    toast.success("Declined Joined Workspace !", {
+      position: "bottom-right",
+      autoClose: 3500,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
     });
   };
 
@@ -42,7 +85,10 @@ const NotificationComponent = () => {
     <div className="min-h-[18rem]">
       {wslist.map((workspace, index) => {
         return (
-          <div className="p-4 border-gray-300 border-b max-h-fit overflow-y-hidden ">
+          <div
+            key={workspace + index}
+            className="p-4 border-gray-300 border-b max-h-fit overflow-y-hidden "
+          >
             <div className="mb-2">
               You have been invited to {workspace.name}
             </div>
@@ -54,7 +100,12 @@ const NotificationComponent = () => {
             >
               Accept
             </button>
-            <button className="bg-red-400 ml-2 rounded py-1 px-3 text-white">
+            <button
+              onClick={() => {
+                handleDec(workspace);
+              }}
+              className="bg-red-400 ml-2 rounded py-1 px-3 text-white"
+            >
               Decline
             </button>
           </div>

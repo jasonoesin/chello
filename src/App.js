@@ -21,6 +21,8 @@ import CardLinkPage from "./pages/CardLinkPage";
 import { AuthContextProvider } from "./middleware/AuthContext";
 import ProtectedRoute from "./middleware/ProtectedRoute";
 import { NotifContext } from "./notification/NotifContext";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const NavLayout = () => {
   return (
@@ -48,6 +50,8 @@ function App() {
     <AuthContextProvider>
       <NotifContext>
         <div className="absolute w-screen">
+          <ToastContainer className="" />
+
           <Routes>
             <Route exact path="/" element={<Login />} />
             <Route exact path="/register" element={<Register />} />
