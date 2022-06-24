@@ -7,6 +7,7 @@ import {
   arrayUnion,
   collection,
   doc,
+  getDoc,
   onSnapshot,
   updateDoc,
 } from "firebase/firestore";
@@ -27,6 +28,8 @@ const InviteWorkspace = (props) => {
       if (!snapshot.empty) {
         let b = [];
         snapshot.docs.forEach((doc) => {
+          if (doc.data().id === user.uid) return;
+
           b.push({
             value: doc.data().id,
             label: doc.data().email,
@@ -87,10 +90,46 @@ const InviteWorkspace = (props) => {
         />
 
         <button
-          onClick={() => {
+          onClick={async () => {
+            const ref = doc(db, "workspace", params.id);
+
+            const og = await getDoc(ref);
+
+            console.log(og.data(), selectRef.current);
+
+            if (og.data().members.includes(selectRef.current)) {
+              toast.error("User has already joined", {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+              });
+              return;
+            }
+
             const colRef = doc(db, "notification", selectRef.current);
 
-            console.log(colRef);
+            const data = await getDoc(colRef);
+
+            let find = data
+              .data()
+              .invite.find((obj) => obj["workspace"] === params.id);
+
+            if (find) {
+              toast.error("User has already invited", {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+              });
+              return;
+            }
 
             updateDoc(colRef, {
               invite: arrayUnion({
