@@ -31,11 +31,11 @@ const AddWorkSpace = (props) => {
   }, [userID]);
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center">
-      <div className="bg-white p-10 rounded w-1/2 h-3/4 absolute space-y-3">
+    <div className="fixed inset-0 z-[100] bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center">
+      <div className="bg-white p-10 rounded w-1/2 h-3/4 absolute z-[100] space-y-3">
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          className="h-6 w-6 right-5 absolute cursor-pointer"
+          className="h-6 w-6 right-5 absolute z-[100] cursor-pointer"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"

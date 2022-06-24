@@ -8,8 +8,8 @@ const Home = () => {
   return (
     <div className="">
       <div className="mt-24 w-screen h-fit">
-        <div className="wrap px-16">
-          <div className="!SIDEBAR fixed">
+        <div className="wrap px-16 relative">
+          <div className="!SIDEBAR fixed z-[100]">
             <Sidebar />
             <div className="mt-4">
               <Workspace />

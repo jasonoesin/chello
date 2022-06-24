@@ -92,7 +92,15 @@ const Invite = () => {
           </button>
         </div>
       ) : (
-        <p className="font-bold">Error Invite Link !</p>
+        <div className="flex flex-col">
+          <p className="font-bold">Error Invite Link !</p>
+          <button
+            onClick={() => [nav(-1)]}
+            className="px-6 py-2 bg-blue-500 rounded-md w-full mt-3 text-sm font-semi-bold text-white"
+          >
+            Go back
+          </button>
+        </div>
       )}
     </>
   );
