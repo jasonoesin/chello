@@ -91,37 +91,22 @@ const CardFileAttach = (props) => {
         </div>
       }
 
-      <div className="ml-3 mt-4 flex flex-col mb-4">
-        <input
-          onChange={(e) => {
-            setfileUpload(e.target.files[0]);
-          }}
-          type="file"
-        />
-        <button
-          onClick={uploadImage}
-          className="mt-2 px-4 py-1 w-1/4 bg-gray-100 hover:bg-gray-200 rounded border"
-        >
-          Submit
-        </button>
-      </div>
-
-      {/* <form className="p-2 absolute top-12 right-0 rounded text-xs ">
-        <button className="text-gray-400 hover:text-gray-500 underline">
-          Attach Link Instead
-        </button>
-        <div className="p-3 bg-white border-gray-50 border rounded drop-shadow-xl h-fit  w-64  flex flex-col">
-          Attach Link
+      {props.isMember ? (
+        <div className="ml-3 mt-4 flex flex-col mb-4">
           <input
-            className="mt-1 border-gray-200 border-2 px-3 py-2 rounded"
-            type="text"
-            placeholder="Testing"
+            onChange={(e) => {
+              setfileUpload(e.target.files[0]);
+            }}
+            type="file"
           />
-          <button className="mt-2 px-4 py-1 w-1/3 bg-gray-100 hover:bg-gray-200 rounded border ">
-            Attach
+          <button
+            onClick={uploadImage}
+            className="mt-2 px-4 py-1 w-1/4 bg-gray-100 hover:bg-gray-200 rounded border"
+          >
+            Submit
           </button>
         </div>
-      </form> */}
+      ) : null}
     </div>
   );
 };

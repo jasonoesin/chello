@@ -52,7 +52,7 @@ const HomeComponent = () => {
             {workspaceList.map((ws) => {
               return (
                 <li className="flex flex-row w-full" key={ws.name}>
-                  <div
+                  <Link
                     to={"/workspace/" + ws.id}
                     className="select-none cursor-pointer hover:bg-gray-50 flex flex-1 items-center p-4"
                   >
@@ -78,7 +78,7 @@ const HomeComponent = () => {
                         </svg>
                       </button>
                     </div>
-                  </div>
+                  </Link>
                 </li>
               );
             })}
