@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import { GetNotif } from "../notification/NotifContext";
 import NotificationComponent from "./NotificationComponent";
 
 const NotificationPop = () => {
@@ -7,6 +8,7 @@ const NotificationPop = () => {
 
   let menuRef = useRef();
   let svgRef = useRef();
+  const { notifs } = GetNotif();
 
   useEffect(() => {
     let handler = (e) => {
@@ -30,8 +32,12 @@ const NotificationPop = () => {
         onClick={() => {
           setIsOpen((isOpen) => !isOpen);
         }}
-        className="h-full"
+        className="h-full relative"
       >
+        {notifs.invite && notifs.invite.length !== 0 ? (
+          <div className="bg-red-500 absolute h-1.5 w-1.5 rounded-full right-1 ring-2 ring-white"></div>
+        ) : null}
+
         <svg
           xmlns="http://www.w3.org/2000/svg"
           className="h-6 w-6 hover:bg-gray-200 cursor-pointer"

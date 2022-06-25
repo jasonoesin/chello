@@ -4,11 +4,15 @@ import ListComponent from "./ListComponent";
 
 const ListContainer = (props) => {
   return (
-    <div className="flex flex-wrap ">
-      <ListComponent isMember={props.isMember} />
-
-      {props.isMember ? <AddList /> : null}
-    </div>
+    <>
+      <div className="mt-1 mb-3 font-bold text-gray-900 tracking-tight text-4xl">
+        {props.board.title}
+      </div>
+      <div className="flex flex-wrap ">
+        <ListComponent isMember={props.isMember} />
+        {props.isMember ? <AddList /> : null}
+      </div>
+    </>
   );
 };
 

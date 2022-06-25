@@ -19,6 +19,7 @@ const BoardPage = () => {
   useEffect(() => {
     onSnapshot(boardRef, (s) => {
       if (user.uid) {
+        setData(s.data());
         // VALIDASI APAKAH BOARD MEMBER
 
         if (s.data().members.includes(user.uid)) {
@@ -67,6 +68,7 @@ const BoardPage = () => {
 
   return (
     <div className="">
+      <div className="h-0">EMTPY DIV</div>
       <div className="mt-24 w-screen h-fit">
         <div className="wrap px-16">
           <div className="!SIDEBAR fixed">
@@ -76,7 +78,7 @@ const BoardPage = () => {
             </div>
           </div>
           <div className="pl-64">
-            <ListContainer isMember={isMember} />
+            <ListContainer isMember={isMember} board={data} />
           </div>
         </div>
       </div>

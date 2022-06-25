@@ -13,12 +13,13 @@ export const NotifContext = ({ children }) => {
   const { user } = UserAuth();
 
   useEffect(() => {
-    if (user.uid !== undefined) {
-      const ref = doc(db, "notification", user.uid);
-      onSnapshot(ref, (snap) => {
-        if (snap) setNotifs(snap.data());
-      });
-    }
+    if (user)
+      if (user.uid !== undefined) {
+        const ref = doc(db, "notification", user.uid);
+        onSnapshot(ref, (snap) => {
+          if (snap) setNotifs(snap.data());
+        });
+      }
   }, [user]);
 
   return <Context.Provider value={{ notifs }}>{children}</Context.Provider>;

@@ -49,7 +49,7 @@ function App() {
   return (
     <AuthContextProvider>
       <NotifContext>
-        <div className="absolute w-screen">
+        <div className="w-screen">
           <ToastContainer className="" />
 
           <Routes>

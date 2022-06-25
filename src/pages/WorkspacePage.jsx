@@ -39,15 +39,16 @@ const WorkspacePage = () => {
 
   return (
     <div className="">
+      <div className="h-0">EMTPY DIV</div>
       <div className="mt-24 w-screen h-fit">
         <div className="wrap px-16">
-          <div className="!SIDEBAR fixed">
+          <div className="!SIDEBAR fixed z-[50]">
             <Sidebar />
             <div className="mt-4">
               <Workspace open={params.id} />
             </div>
           </div>
-          <div className="pl-64">
+          <div className="pl-64 relative">
             <BoardContainer ws={data} isMember={state} />
           </div>
         </div>

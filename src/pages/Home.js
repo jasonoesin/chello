@@ -7,6 +7,7 @@ import Workspace from "../components/Workspace";
 const Home = () => {
   return (
     <div className="">
+      <div className="h-0">EMTPY DIV</div>
       <div className="mt-24 w-screen h-fit">
         <div className="wrap px-16 relative">
           <div className="!SIDEBAR fixed z-[100]">

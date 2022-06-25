@@ -6,6 +6,8 @@ import {
   onSnapshot,
   query,
   where,
+  updateDoc,
+  doc,
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { db } from "../firebase-config";
@@ -32,6 +34,13 @@ const Card = (props) => {
       }
     });
   }, []);
+
+  const dueDateColor = (val) => {
+    if (!val) return "bg-gray-300";
+
+    if (val === "yes") return "bg-green-300";
+    else return "bg-red-300";
+  };
 
   const createNewCard = (card, index) => {
     return (
@@ -73,6 +82,47 @@ const Card = (props) => {
                 ) : null}
 
                 {card.title}
+
+                {card.duedate ? (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+
+                      if (card.done && card.done === "yes") {
+                        updateDoc(doc(db, "card", card.id), {
+                          done: "",
+                        });
+                        return;
+                      }
+
+                      e.target.classList.remove("bg-gray-300");
+                      e.target.classList.add("bg-green-300");
+
+                      updateDoc(doc(db, "card", card.id), {
+                        done: "yes",
+                      });
+                    }}
+                    className={`text-gray-600 text-xs ${dueDateColor(
+                      card.done
+                    )} w-fit pl-3 pr-4 mt-1 py-1 flex justify-center items-center rounded-md`}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4 mr-1 "
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                    {new Date(card.duedate).toLocaleDateString("en-US")}
+                  </button>
+                ) : null}
               </div>
             </div>
           );
