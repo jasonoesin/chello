@@ -1,7 +1,7 @@
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { app } from "../firebase-config";
-
+import { toast } from "react-toastify";
 const auth = getAuth();
 
 function showPass() {
@@ -21,8 +21,15 @@ const Login = () => {
         navigate("/home");
       })
       .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
+        toast.error("Wrong email or password !", {
+          position: "bottom-right",
+          autoClose: 3500,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       });
   }
 

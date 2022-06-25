@@ -2,6 +2,8 @@ import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { Link, useNavigate } from "react-router-dom";
 import { app, db } from "../firebase-config";
 import { addDoc, collection, doc, setDoc } from "firebase/firestore";
+import { toast } from "react-toastify";
+
 const auth = getAuth();
 
 const color = () => {
@@ -39,10 +41,31 @@ const Register = () => {
       e.target.email.value.length === 0 ||
       e.target.pass.value.length === 0 ||
       e.target.conf.value.length === 0
-    )
+    ) {
+      toast.error("You can't leave the credentials empty !", {
+        position: "bottom-right",
+        autoClose: 3500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
       return;
+    }
 
-    if (e.target.pass.value !== e.target.conf.value) return;
+    if (e.target.pass.value !== e.target.conf.value) {
+      toast.error("Password is not the same !", {
+        position: "bottom-right",
+        autoClose: 3500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      return;
+    }
 
     createUserWithEmailAndPassword(
       auth,
