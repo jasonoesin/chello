@@ -17,6 +17,7 @@ import { db } from "../firebase-config";
 import { useParams, useLocation, Link } from "react-router-dom";
 import Card from "./Card";
 import CardDetail from "./CardDetail";
+import { DragDropContext, Droppable } from "react-beautiful-dnd";
 
 const ListComponent = (props) => {
   const [lists, setList] = useState([]);
@@ -56,43 +57,67 @@ const ListComponent = (props) => {
     }
   };
 
+  const onDragEnd = (result, lists, setList) => {
+    if (!result.destination) return;
+    const { draggableId, source, destination } = result;
+
+    updateDoc(doc(db, "card", draggableId), {
+      list: destination.droppableId,
+    });
+  };
+
   var createNewList = (list) => {
     return (
-      <Fragment key={list.id}>
-        <div className="h-fit ml-2 mb-2 bg-gray-50  rounded-sm w-1/4 p-2 shadow-md ">
-          {props.isMember ? (
-            <input
-              onKeyDown={(e) => {
-                handleChange(e, list);
-              }}
-              id="title"
-              defaultValue={list.title}
-              type=" text"
-              className="bg-gray-50 p-2 text-gray-600 font-bold"
-            ></input>
-          ) : (
-            <div className="bg-gray-50 p-2 text-gray-600 font-bold">
-              {list.title}
-            </div>
-          )}
+      <Droppable key={list.id} droppableId={list.id}>
+        {(provided, snapshot) => {
+          return (
+            <Fragment>
+              <div
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+                className="h-fit ml-2 mb-2 bg-gray-50  rounded-sm w-1/4 p-2 shadow-md "
+              >
+                {props.isMember ? (
+                  <input
+                    onKeyDown={(e) => {
+                      handleChange(e, list);
+                    }}
+                    id="title"
+                    defaultValue={list.title}
+                    type=" text"
+                    className="bg-gray-50 p-2 text-gray-600 font-bold"
+                  ></input>
+                ) : (
+                  <div className="bg-gray-50 p-2 text-gray-600 font-bold">
+                    {list.title}
+                  </div>
+                )}
 
-          <Card list={list.id} handle={handleClickCard} />
-          {props.isMember ? <AddCard list={list.id} /> : null}
-        </div>
+                <Card list={list.id} handle={handleClickCard} />
+                {provided.placeholder}
+                {props.isMember ? <AddCard list={list.id} /> : null}
+              </div>
 
-        {list.id === detail ? (
-          <CardDetail
-            current={curr.current}
-            hidden="false"
-            handle={handleClickCard}
-            isMember={props.isMember}
-          />
-        ) : null}
-      </Fragment>
+              {list.id === detail ? (
+                <CardDetail
+                  current={curr.current}
+                  hidden="false"
+                  handle={handleClickCard}
+                  isMember={props.isMember}
+                />
+              ) : null}
+            </Fragment>
+          );
+        }}
+      </Droppable>
     );
   };
 
-  return <>{lists.map(createNewList)}</>;
+  return (
+    <DragDropContext onDragEnd={(result) => onDragEnd(result)}>
+      {lists.map(createNewList)}
+    </DragDropContext>
+  );
 };
 
 export default ListComponent;

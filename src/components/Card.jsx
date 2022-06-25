@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import { db } from "../firebase-config";
 import CardDetail from "./CardDetail";
 import { Fragment } from "react";
+import { Draggable } from "react-beautiful-dnd";
 
 const Card = (props) => {
   const [cards, setCard] = useState([]);
@@ -32,31 +33,51 @@ const Card = (props) => {
     });
   }, []);
 
-  const createNewCard = (card) => {
+  const createNewCard = (card, index) => {
     return (
-      <Fragment key={card.id}>
-        <button
-          onClick={() => {
-            props.handle(props.list, card);
-          }}
-          className="p-2 w-full text-left bg-white rounded-sm border"
-        >
-          {card.labels ? (
-            <div className="flex flex-wrap">
-              {card.labels.map((label) => {
-                return (
-                  <div
-                    key={card.id + label}
-                    className={`h-2 w-10 ${label} rounded-md mt-1 ml-1`}
-                  ></div>
-                );
-              })}
-            </div>
-          ) : null}
+      <Draggable key={card.id} draggableId={card.id} index={index}>
+        {(provided, snapshot) => {
+          return (
+            <div
+              style={{
+                ...provided.draggableProps.style,
+              }}
+              ref={provided.innerRef}
+              {...provided.draggableProps}
+              {...provided.dragHandleProps}
+              key={card.id}
+            >
+              <div
+                onClick={() => {
+                  props.handle(props.list, card);
+                }}
+                style={{
+                  transform: snapshot.isDragging ? "rotate(7deg)" : "",
+                  backgroundColor: snapshot.isDragging
+                    ? "rgb(241 245 249)"
+                    : "#ffffff",
+                }}
+                className="p-2 w-full text-left bg-white rounded-sm border"
+              >
+                {card.labels ? (
+                  <div className="flex flex-wrap">
+                    {card.labels.map((label) => {
+                      return (
+                        <div
+                          key={card.id + label}
+                          className={`h-2 w-10 ${label} rounded-md mt-1 ml-1`}
+                        ></div>
+                      );
+                    })}
+                  </div>
+                ) : null}
 
-          {card.title}
-        </button>
-      </Fragment>
+                {card.title}
+              </div>
+            </div>
+          );
+        }}
+      </Draggable>
     );
   };
 
