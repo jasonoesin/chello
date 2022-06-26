@@ -352,7 +352,7 @@ const CardDetail = (props) => {
                 </div>
 
                 <CardLink card={props.current.id} />
-                <DueDate card={props.current.id} />
+                <DueDate card={props.current.id} board={props.board} />
               </div>
             ) : null}
           </div>

@@ -34,7 +34,8 @@ const NotificationPop = () => {
         }}
         className="h-full relative"
       >
-        {notifs.invite && notifs.invite.length !== 0 ? (
+        {(notifs.invite && notifs.invite.length !== 0) ||
+        (notifs.reminder && notifs.reminder.length !== 0) ? (
           <div className="bg-red-500 absolute h-1.5 w-1.5 rounded-full right-1 ring-2 ring-white"></div>
         ) : null}
 

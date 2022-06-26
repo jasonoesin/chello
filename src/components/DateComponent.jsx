@@ -5,7 +5,7 @@ import setMinutes from "date-fns/setMinutes";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Select from "react-select";
-import { doc, serverTimestamp, updateDoc } from "firebase/firestore";
+import { doc, serverTimestamp, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase-config";
 
 const DateComponent = (props) => {
@@ -48,11 +48,16 @@ const DateComponent = (props) => {
       duedate: selectedDate.getTime(),
     });
 
-    console.log(
-      selectedDate,
-      selectForm.select.value,
-      new Date(selectedDate.getTime() - parseInt(selectForm.select.value))
-    );
+    if (selectForm.select.value != 0) {
+      const reminderTime = selectedDate.getTime() - selectForm.select.value;
+
+      console.log(new Date(reminderTime));
+
+      setDoc(doc(db, "reminder", props.card), {
+        reminder: reminderTime,
+        board: props.board.id,
+      });
+    }
   };
 
   return (

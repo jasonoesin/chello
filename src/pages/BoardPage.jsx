@@ -19,7 +19,7 @@ const BoardPage = () => {
   useEffect(() => {
     onSnapshot(boardRef, (s) => {
       if (user.uid) {
-        setData(s.data());
+        setData({ ...s.data(), id: s.id });
         // VALIDASI APAKAH BOARD MEMBER
 
         if (s.data().members.includes(user.uid)) {
@@ -35,6 +35,8 @@ const BoardPage = () => {
               console.log("Not Eligible to See Board");
               nav("/home");
               return;
+            } else if (d.data().members.includes(user.uid)) {
+              setIsMember(true);
             }
           });
         }

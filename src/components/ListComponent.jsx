@@ -93,13 +93,18 @@ const ListComponent = (props) => {
                   </div>
                 )}
 
-                <Card list={list.id} handle={handleClickCard} />
+                <Card
+                  list={list.id}
+                  handle={handleClickCard}
+                  isMember={props.isMember}
+                />
                 {provided.placeholder}
                 {props.isMember ? <AddCard list={list.id} /> : null}
               </div>
 
               {list.id === detail ? (
                 <CardDetail
+                  board={props.board}
                   current={curr.current}
                   hidden="false"
                   handle={handleClickCard}

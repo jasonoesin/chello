@@ -46,7 +46,7 @@ const DueDate = (props) => {
         <div className="z-30 !CLICKED_LABEL bg-white border-gray-50 border rounded drop-shadow-xl h-1/3 absolute w-[21rem]">
           <p className="w-full text-center p-3">Set a due date for card</p>
 
-          <DateComponent card={props.card} />
+          <DateComponent card={props.card} board={props.board} />
         </div>
       ) : null}
     </div>

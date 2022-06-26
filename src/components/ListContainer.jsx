@@ -9,7 +9,7 @@ const ListContainer = (props) => {
         {props.board.title}
       </div>
       <div className="flex flex-wrap ">
-        <ListComponent isMember={props.isMember} />
+        <ListComponent isMember={props.isMember} board={props.board} />
         {props.isMember ? <AddList /> : null}
       </div>
     </>

@@ -81,8 +81,38 @@ const NotificationComponent = () => {
     });
   };
 
+  const deleteMsg = (msg) => {
+    const colRef = doc(db, "notification", user.uid);
+    updateDoc(colRef, {
+      reminder: arrayRemove(msg),
+    });
+
+    toast.success("Notification Deleted !", {
+      position: "bottom-right",
+      autoClose: 3500,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  };
+
   return (
     <div className="min-h-[18rem]">
+      {notifs.reminder &&
+        notifs.reminder.map((msg) => {
+          return (
+            <div
+              onClick={() => deleteMsg(msg)}
+              key={msg}
+              className="cursor-pointer p-4 border-gray-300 border-b h-full overflow-y-hidden "
+            >
+              <div className="mb-2">{msg}</div>
+            </div>
+          );
+        })}
+
       {wslist.map((workspace, index) => {
         return (
           <div

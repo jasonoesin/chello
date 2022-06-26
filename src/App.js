@@ -23,6 +23,7 @@ import ProtectedRoute from "./middleware/ProtectedRoute";
 import { NotifContext } from "./notification/NotifContext";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { ReminderContext } from "./notification/DueDateReminderContext";
 
 const NavLayout = () => {
   return (
@@ -49,38 +50,40 @@ function App() {
   return (
     <AuthContextProvider>
       <NotifContext>
-        <div className="w-screen">
-          <ToastContainer className="" />
+        <ReminderContext>
+          <div className="w-screen">
+            <ToastContainer className="" />
 
-          <Routes>
-            <Route exact path="/" element={<Login />} />
-            <Route exact path="/register" element={<Register />} />
+            <Routes>
+              <Route exact path="/" element={<Login />} />
+              <Route exact path="/register" element={<Register />} />
 
-            <Route element={<Protected />}>
-              <Route element={<NavLayout />}>
-                <Route path="workspace/:id" element={<WorkspacePage />} />
+              <Route element={<Protected />}>
+                <Route element={<NavLayout />}>
+                  <Route path="workspace/:id" element={<WorkspacePage />} />
+                  <Route
+                    path="workspace/:id/settings"
+                    element={<WorkspaceSettings />}
+                  />
+                  <Route path="card/:id/" element={<CardLinkPage />} />
+                  <Route path="board/:id/" element={<BoardPage />} />
+                  <Route path="settings" element={<Settings />} />
+                  <Route path="home" element={<Home />} />
+                </Route>
+
                 <Route
-                  path="workspace/:id/settings"
-                  element={<WorkspaceSettings />}
+                  exact
+                  path="/invite-workspace/:id"
+                  element={
+                    <div className="w-screen h-screen flex justify-center items-center">
+                      <Invite />
+                    </div>
+                  }
                 />
-                <Route path="card/:id/" element={<CardLinkPage />} />
-                <Route path="board/:id/" element={<BoardPage />} />
-                <Route path="settings" element={<Settings />} />
-                <Route path="home" element={<Home />} />
               </Route>
-
-              <Route
-                exact
-                path="/invite-workspace/:id"
-                element={
-                  <div className="w-screen h-screen flex justify-center items-center">
-                    <Invite />
-                  </div>
-                }
-              />
-            </Route>
-          </Routes>
-        </div>
+            </Routes>
+          </div>
+        </ReminderContext>
       </NotifContext>
     </AuthContextProvider>
   );
