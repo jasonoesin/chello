@@ -1,7 +1,14 @@
-import { arrayRemove, deleteDoc, doc, updateDoc } from "firebase/firestore";
+import {
+  arrayRemove,
+  deleteDoc,
+  doc,
+  getDoc,
+  updateDoc,
+} from "firebase/firestore";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { db } from "../firebase-config";
+import { toast } from "react-toastify";
 
 const LeaveWorkspace = (props) => {
   const [modal, setModal] = useState(false);
@@ -49,20 +56,53 @@ const LeaveWorkspace = (props) => {
                   >
                     Are you sure you want to leave this Workspace ?
                   </label>
-                  <p className="text-gray-500 text-sm">Things to know</p>
                 </div>
               </div>
 
               <div>
                 <button
-                  onClick={() => {
+                  onClick={async (e) => {
+                    e.preventDefault();
+                    if (props.isMember !== undefined && !props.isMember) {
+                      await getDoc(ref).then((snap) => {
+                        if (snap.data().members.length === 1) {
+                          deleteDoc(ref);
+                          nav("/home");
+                        } else if (
+                          snap.data().members.length > 1 &&
+                          snap.data().admins.length == 1
+                        ) {
+                          toast.error(
+                            "You must grant at least 1 other member an Admin role !",
+                            {
+                              position: "bottom-right",
+                              autoClose: 3500,
+                              hideProgressBar: false,
+                              closeOnClick: true,
+                              pauseOnHover: true,
+                              draggable: true,
+                              progress: undefined,
+                            }
+                          );
+                        } else {
+                          updateDoc(ref, {
+                            members: arrayRemove(props.user),
+                            admins: arrayRemove(props.user),
+                          });
+
+                          nav("/home");
+                        }
+                      });
+                      return;
+                    }
+
                     updateDoc(ref, {
                       members: arrayRemove(props.user),
                     });
 
                     nav("/home");
                   }}
-                  className="mt-10 w-full flex justify-center 
+                  className="mt-10 w-fit flex justify-center 
             hover:bg-red-500
             bg-red-600 p-2 rounded text-white"
                 >

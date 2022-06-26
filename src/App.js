@@ -24,6 +24,7 @@ import { NotifContext } from "./notification/NotifContext";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ReminderContext } from "./notification/DueDateReminderContext";
+import BoardSettings from "./pages/BoardSettings";
 
 const NavLayout = () => {
   return (
@@ -67,6 +68,10 @@ function App() {
                   />
                   <Route path="card/:id/" element={<CardLinkPage />} />
                   <Route path="board/:id/" element={<BoardPage />} />
+                  <Route
+                    path="board/:id/settings"
+                    element={<BoardSettings />}
+                  />
                   <Route path="settings" element={<Settings />} />
                   <Route path="home" element={<Home />} />
                 </Route>

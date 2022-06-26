@@ -27,6 +27,12 @@ const BoardPage = () => {
           return;
         }
 
+        if (s.data().visibility === "board") {
+          console.log("Not Eligible to See Board");
+          nav("/home");
+          return;
+        }
+
         // VALIDASI APAKAH WORKSPACE MEMBER DAN VISIBILITY WORKSPACE
         if (s.data().visibility === "workspace") {
           const workRef = doc(db, "workspace", s.data().workspace);
@@ -37,6 +43,7 @@ const BoardPage = () => {
               return;
             } else if (d.data().members.includes(user.uid)) {
               setIsMember(true);
+              return;
             }
           });
         }
@@ -73,7 +80,7 @@ const BoardPage = () => {
       <div className="h-0">EMTPY DIV</div>
       <div className="mt-24 w-screen h-fit">
         <div className="wrap px-16">
-          <div className="!SIDEBAR fixed">
+          <div className="!SIDEBAR fixed z-50">
             <Sidebar />
             <div className="mt-4">
               <Workspace open={params.id} />

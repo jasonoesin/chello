@@ -1,5 +1,5 @@
 import AddCard from "./AddCard";
-import { Fragment, useEffect, useRef } from "react";
+import { Fragment, useEffect, useImperativeHandle, useRef } from "react";
 import { useState } from "react";
 import {
   getFirestore,
@@ -18,10 +18,12 @@ import { useParams, useLocation, Link } from "react-router-dom";
 import Card from "./Card";
 import CardDetail from "./CardDetail";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
+import { forwardRef } from "react";
 
-const ListComponent = (props) => {
+const ListComponent = forwardRef((props, ref) => {
   const [lists, setList] = useState([]);
   const [detail, setDetail] = useState("");
+
   const colRef = collection(db, "list");
   const params = useParams();
   const location = useLocation();
@@ -38,6 +40,7 @@ const ListComponent = (props) => {
           b.push({ ...doc.data(), id: doc.id });
         });
         setList(b);
+        setFiltered(b);
       }
     });
 
@@ -65,6 +68,31 @@ const ListComponent = (props) => {
       list: destination.droppableId,
     });
   };
+
+  // SEARCH
+  const [filter, setFiltered] = useState([]);
+
+  // useEffect(() => {
+  //   setFiltered(
+  //     contacts.filter(
+  //       (user) =>
+  //         user.name.toLowerCase().includes(search.toLowerCase()) ||
+  //         user.city.toLowerCase().includes(search.toLowerCase())
+  //     )
+  //   );
+  // }, [search]);
+
+  useImperativeHandle(ref, () => ({
+    searchOnChange(e) {
+      setFiltered(
+        lists.filter((list) => {
+          return list.title
+            .toLowerCase()
+            .includes(e.target.value.toLowerCase());
+        })
+      );
+    },
+  }));
 
   var createNewList = (list) => {
     return (
@@ -120,9 +148,9 @@ const ListComponent = (props) => {
 
   return (
     <DragDropContext onDragEnd={(result) => onDragEnd(result)}>
-      {lists.map(createNewList)}
+      {filter.map(createNewList)}
     </DragDropContext>
   );
-};
+});
 
 export default ListComponent;

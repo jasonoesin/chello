@@ -6,20 +6,18 @@ import DeleteWorkspace from "../components/DeleteWorkspace";
 import InviteWorkspace from "../components/InviteWorkspace";
 import LeaveWorkspace from "../components/LeaveWorkspace";
 import Member from "../components/Member";
-import Notification from "../components/Notification";
 import { db } from "../firebase-config";
 import { UserAuth } from "../middleware/AuthContext";
-import Select from "react-select";
 
 const auth = getAuth();
 
-const WorkspaceSettings = () => {
+const BoardSettings = () => {
   const [showModal, setShowModal] = useState(false);
   const [isMember, setIsMember] = useState(true);
   const [data, setData] = useState({});
   const params = useParams();
 
-  const ref = doc(db, "workspace", params.id);
+  const ref = doc(db, "board", params.id);
 
   function handleClose() {
     setShowModal(false);
@@ -34,10 +32,33 @@ const WorkspaceSettings = () => {
         if (snap.data() === undefined) {
           return;
         }
+        setData(snap.data());
+
+        // VALIDASI APAKAH BOARD MEMBER
+
+        if (snap.data().members.includes(user.uid)) {
+          setIsMember(true);
+          return;
+        }
+
+        // VALIDASI APAKAH WORKSPACE MEMBER DAN VISIBILITY WORKSPACE
+        if (snap.data().visibility === "workspace") {
+          const workRef = doc(db, "workspace", snap.data().workspace);
+          onSnapshot(workRef, (d) => {
+            if (!d.data().members.includes(user.uid)) {
+              console.log("Not Eligible to See Board");
+              nav("/home");
+              return;
+            } else if (d.data().members.includes(user.uid)) {
+              setIsMember(true);
+              return;
+            }
+          });
+        }
 
         if (!snap.data().members.includes(user.uid)) nav("/home");
 
-        setData(snap.data());
+        // ----
 
         if (snap.data().admins.includes(user.uid)) {
           setIsMember(false);
@@ -92,7 +113,7 @@ const WorkspaceSettings = () => {
             <div className="mt-1 mb-3 font-bold text-gray-900 tracking-tight text-4xl">
               {data.name}
             </div>
-            <div className="font-bold">Workspace Settings</div>
+            <div className="font-bold">Board Settings</div>
             <div className="flex">
               <div className="w-12">
                 <svg
@@ -258,4 +279,4 @@ const WorkspaceSettings = () => {
   );
 };
 
-export default WorkspaceSettings;
+export default BoardSettings;

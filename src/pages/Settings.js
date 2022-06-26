@@ -1,10 +1,13 @@
 import { collection, doc, onSnapshot, query, where } from "firebase/firestore";
+import { ref } from "firebase/storage";
 import { useState } from "react";
 import { useEffect } from "react";
-import { db } from "../firebase-config";
+import { db, storage } from "../firebase-config";
 import { UserAuth } from "../middleware/AuthContext";
 
 const Settings = () => {
+  const [fileUpload, setfileUpload] = useState(null);
+
   const { user } = UserAuth();
   const [state, setState] = useState([]);
 
@@ -21,6 +24,8 @@ const Settings = () => {
     return unsub;
   }, [user]);
 
+  const imageRef = ref(storage, `user-profiles/${user.uid}/`);
+
   return (
     <>
       <div className="h-0">EMTPY DIV</div>
@@ -35,8 +40,17 @@ const Settings = () => {
             <div className="font-bold">Profile Photo</div>
             <div className="flex flex-row justify-around p-10 relative">
               <div className="">
+                <input
+                  onChange={(e) => {
+                    setfileUpload(e.target.files[0]);
+                  }}
+                  className="bg-black h-[8.5rem] w-[8.5rem] top-10 left-16  absolute rounded-full opacity-0 cursor-pointer"
+                  type="file"
+                  name="myImage"
+                  accept="image/*"
+                />
                 <img
-                  className="w-2/3 rounded-full border border-white"
+                  className="w-2/3 rounded-full border border-white hover:opacity-90 cursor-pointer"
                   src="https://i.picsum.photos/id/66/200/200.jpg?hmac=gaKXe-rWmo5fSEm79TTkW_yFJLECw3FdRCh6Dm7jp4g"
                   alt=""
                 />
