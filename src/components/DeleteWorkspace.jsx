@@ -1,13 +1,22 @@
-import { deleteDoc, doc } from "firebase/firestore";
+import {
+  arrayUnion,
+  deleteDoc,
+  doc,
+  getDoc,
+  updateDoc,
+} from "firebase/firestore";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { db } from "../firebase-config";
+import { UserAuth } from "../middleware/AuthContext";
+import { toast } from "react-toastify";
 
 const DeleteWorkspace = () => {
   const [modal, setModal] = useState(false);
   const params = useParams();
   const nav = useNavigate();
   let menuRef = useRef();
+  const { user } = UserAuth();
 
   useEffect(() => {
     let handler = (e) => {
@@ -65,8 +74,45 @@ const DeleteWorkspace = () => {
 
               <div>
                 <button
-                  onClick={() => {
-                    deleteDoc(doc(db, "workspace", params.id));
+                  onClick={async (e) => {
+                    e.preventDefault();
+                    const ref = doc(db, "workspace", params.id);
+
+                    const data = await getDoc(ref);
+                    if (data.data().admins.length > 1) {
+                      var prom = data.data().admins.map(async (id) => {
+                        return await getDoc(doc(db, "user", id));
+                      });
+
+                      updateDoc(ref, {
+                        delete: [user.uid],
+                      });
+
+                      Promise.all(prom).then((docs) => {
+                        docs.map((d) => {
+                          if (user.uid !== d.id)
+                            updateDoc(doc(db, "notification", d.id), {
+                              delete: arrayUnion(data.id),
+                            });
+                        });
+                      });
+
+                      toast.success("Other Admins Notified for Permission !", {
+                        position: "bottom-right",
+                        autoClose: 3500,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                      });
+
+                      setModal(false);
+
+                      return;
+                    }
+
+                    deleteDoc(ref);
                     nav("/home");
                   }}
                   className="mt-10 w-full flex justify-center 

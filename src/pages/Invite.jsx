@@ -16,9 +16,9 @@ import {
 } from "firebase/firestore";
 import { db } from "../firebase-config";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { UserAuth } from "../middleware/AuthContext";
 
 const auth = getAuth();
-var u = null;
 
 const Invite = () => {
   const nav = useNavigate();
@@ -26,23 +26,35 @@ const Invite = () => {
   const params = useParams();
   const ref = doc(db, "link", params.id);
   var [workspaceRef, setWorkspaceRef] = useState(null);
+  const { user } = UserAuth();
+
+  var prom;
 
   const colRef = collection(db, "link");
-
   useEffect(() => {
     const snaps = onSnapshot(colRef, (docs) => {
       if (!docs.empty) {
-        let b = [];
-        docs.docs.forEach((snap) => {
+        prom = docs.docs.map(async (snap) => {
           if (snap.empty) return;
 
           var diff = Timestamp.now().seconds - snap.data().timespace.seconds;
 
-          if (diff < 86400) {
-            b.push({ ...snap.data(), id: snap.id });
-          } else {
+          if (diff > 86400) {
             deleteDoc(doc(db, "link", snap.id));
           }
+        });
+
+        Promise.all(prom).then(() => {
+          getDoc(ref).then((snap) => {
+            if (snap.data() === undefined) return;
+
+            workspaceRef = doc(db, "workspace", snap.data().workspace);
+            setWorkspaceRef(workspaceRef);
+
+            getDoc(workspaceRef).then((data) => {
+              setName(data.data().name);
+            });
+          });
         });
       }
     });
@@ -50,26 +62,8 @@ const Invite = () => {
     return snaps;
   }, []);
 
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        u = user;
-        getDoc(ref).then((snap) => {
-          if (snap.data() === undefined) return;
-
-          workspaceRef = doc(db, "workspace", snap.data().workspace);
-          setWorkspaceRef(workspaceRef);
-
-          getDoc(workspaceRef).then((data) => {
-            setName(data.data().name);
-          });
-        });
-      }
-    });
-  }, []);
-
   function join() {
-    if (u) {
+    if (user) {
       if (workspaceRef)
         updateDoc(workspaceRef, {
           members: arrayUnion(auth.currentUser.uid),

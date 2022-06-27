@@ -84,6 +84,8 @@ const Register = () => {
 
         setDoc(doc(db, "notification", cred.user.uid), {
           invite: [],
+          reminder: [],
+          delete: [],
         });
 
         navigate("/home");

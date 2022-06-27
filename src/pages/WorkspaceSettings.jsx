@@ -32,6 +32,7 @@ const WorkspaceSettings = () => {
     if (user.uid) {
       unsub = onSnapshot(ref, (snap) => {
         if (snap.data() === undefined) {
+          nav("/home");
           return;
         }
 

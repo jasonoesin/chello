@@ -2,6 +2,7 @@ import { data } from "autoprefixer";
 import {
   arrayRemove,
   arrayUnion,
+  deleteDoc,
   doc,
   getDoc,
   updateDoc,
@@ -16,6 +17,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 const NotificationComponent = () => {
   const [wslist, setWslist] = useState([]);
+  const [delList, setDelList] = useState([]);
   const { notifs } = GetNotif();
   const { user } = UserAuth();
 
@@ -36,6 +38,19 @@ const NotificationComponent = () => {
           setWslist(w);
         });
       }
+    if (notifs.delete !== undefined) {
+      let w = [];
+
+      var prom = notifs.delete.map(async (workspace) => {
+        await getDoc(doc(db, "workspace", workspace)).then((dat) => {
+          w.push({ ...dat.data(), id: dat.id });
+        });
+      });
+
+      Promise.all(prom).then(() => {
+        setDelList(w);
+      });
+    }
   }, [notifs]);
 
   const handleAcc = (ws) => {
@@ -98,6 +113,52 @@ const NotificationComponent = () => {
     });
   };
 
+  const handleDecWs = (ws) => {
+    const colRef = doc(db, "notification", user.uid);
+    updateDoc(colRef, {
+      delete: arrayRemove(ws.id),
+    });
+
+    toast.success("Declined Deletion of Workspace !", {
+      position: "bottom-right",
+      autoClose: 3500,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  };
+
+  const handleAccWs = (ws) => {
+    const colRef = doc(db, "notification", user.uid);
+    updateDoc(colRef, {
+      delete: arrayRemove(ws.id),
+    });
+
+    const wsRef = doc(db, "workspace", ws.id);
+
+    updateDoc(wsRef, {
+      delete: arrayUnion(user.uid),
+    });
+
+    toast.success("Accepted Deletion of Workspace !", {
+      position: "bottom-right",
+      autoClose: 3500,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+
+    getDoc(wsRef).then((doc) => {
+      if (doc.data().admins.length === doc.data().delete.length) {
+        deleteDoc(wsRef);
+      }
+    });
+  };
+
   return (
     <div className="min-h-[18rem]">
       {notifs.reminder &&
@@ -133,6 +194,33 @@ const NotificationComponent = () => {
             <button
               onClick={() => {
                 handleDec(workspace);
+              }}
+              className="bg-red-400 ml-2 rounded py-1 px-3 text-white"
+            >
+              Decline
+            </button>
+          </div>
+        );
+      })}
+
+      {delList.map((workspace, index) => {
+        return (
+          <div
+            key={workspace + index}
+            className="p-4 border-gray-300 border-b max-h-fit overflow-y-hidden "
+          >
+            <div className="mb-2">Permission to delete {workspace.name}</div>
+            <button
+              onClick={() => {
+                handleAccWs(workspace);
+              }}
+              className="bg-green-400 rounded py-1 px-3 text-white"
+            >
+              Accept
+            </button>
+            <button
+              onClick={() => {
+                handleDecWs(workspace);
               }}
               className="bg-red-400 ml-2 rounded py-1 px-3 text-white"
             >

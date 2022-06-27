@@ -120,28 +120,12 @@ const Navbar = () => {
         </div>
         <ul className="py-1" aria-labelledby="dropdown">
           <li>
-            <a
-              href="#"
-              className="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-            >
-              Dashboard
-            </a>
-          </li>
-          <li>
             <Link
               to="/settings"
               className="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
             >
               Settings
             </Link>
-          </li>
-          <li>
-            <a
-              href="#"
-              className="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-            >
-              Earnings
-            </a>
           </li>
           <li>
             <button
