@@ -17,39 +17,64 @@ import "react-toastify/dist/ReactToastify.css";
 
 const NotificationComponent = () => {
   const [wslist, setWslist] = useState([]);
+  const [bdlist, setBdList] = useState([]);
   const [delList, setDelList] = useState([]);
   const { notifs } = GetNotif();
   const { user } = UserAuth();
 
   useEffect(() => {
-    if (notifs !== undefined)
+    if (notifs !== undefined) {
       if (notifs.invite !== undefined) {
-        // console.log(notifs.invite);
+        if (notifs.invite.find((obj) => obj["workspace"])) {
+          let w = [];
 
+          let array = notifs.invite.filter((obj) => obj["workspace"]);
+
+          var prom = array.map(async ({ workspace }) => {
+            await getDoc(doc(db, "workspace", workspace)).then((dat) => {
+              w.push({ ...dat.data(), id: dat.id });
+            });
+          });
+
+          Promise.all(prom).then(() => {
+            setWslist(w);
+          });
+        } else {
+          setWslist([]);
+        }
+
+        if (notifs.invite.find((obj) => obj["board"])) {
+          let w = [];
+
+          let array = notifs.invite.filter((obj) => obj["board"]);
+
+          var prom = array.map(async ({ board }) => {
+            await getDoc(doc(db, "board", board)).then((dat) => {
+              w.push({ ...dat.data(), id: dat.id });
+            });
+          });
+
+          Promise.all(prom).then(() => {
+            setBdList(w);
+          });
+        } else {
+          setBdList([]);
+        }
+      }
+
+      if (notifs.delete !== undefined) {
         let w = [];
 
-        var prom = notifs.invite.map(async ({ workspace }) => {
+        var prom = notifs.delete.map(async (workspace) => {
           await getDoc(doc(db, "workspace", workspace)).then((dat) => {
             w.push({ ...dat.data(), id: dat.id });
           });
         });
 
         Promise.all(prom).then(() => {
-          setWslist(w);
+          setDelList(w);
         });
       }
-    if (notifs.delete !== undefined) {
-      let w = [];
-
-      var prom = notifs.delete.map(async (workspace) => {
-        await getDoc(doc(db, "workspace", workspace)).then((dat) => {
-          w.push({ ...dat.data(), id: dat.id });
-        });
-      });
-
-      Promise.all(prom).then(() => {
-        setDelList(w);
-      });
     }
   }, [notifs]);
 
@@ -61,14 +86,53 @@ const NotificationComponent = () => {
 
     var workspaceRef = doc(db, "workspace", ws.id);
 
-    console.log("masuk");
-
     if (workspaceRef)
       updateDoc(workspaceRef, {
         members: arrayUnion(user.uid),
       });
 
     toast.success("Successfully Joined Workspace !", {
+      position: "bottom-right",
+      autoClose: 3500,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  };
+
+  const handleAccBoard = (bd) => {
+    const colRef = doc(db, "notification", user.uid);
+    updateDoc(colRef, {
+      invite: arrayRemove({ board: bd.id }),
+    });
+
+    var boardRef = doc(db, "board", bd.id);
+
+    if (boardRef)
+      updateDoc(boardRef, {
+        members: arrayUnion(user.uid),
+      });
+
+    toast.success("Successfully Joined Board !", {
+      position: "bottom-right",
+      autoClose: 3500,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  };
+
+  const handleDecBoard = (bd) => {
+    const colRef = doc(db, "notification", user.uid);
+    updateDoc(colRef, {
+      invite: arrayRemove({ board: bd.id }),
+    });
+
+    toast.success("Declined Joined Board !", {
       position: "bottom-right",
       autoClose: 3500,
       hideProgressBar: false,
@@ -194,6 +258,33 @@ const NotificationComponent = () => {
             <button
               onClick={() => {
                 handleDec(workspace);
+              }}
+              className="bg-red-400 ml-2 rounded py-1 px-3 text-white"
+            >
+              Decline
+            </button>
+          </div>
+        );
+      })}
+
+      {bdlist.map((board, index) => {
+        return (
+          <div
+            key={board + index}
+            className="p-4 border-gray-300 border-b max-h-fit overflow-y-hidden "
+          >
+            <div className="mb-2">You have been invited to {board.title}</div>
+            <button
+              onClick={() => {
+                handleAccBoard(board);
+              }}
+              className="bg-green-400 rounded py-1 px-3 text-white"
+            >
+              Accept
+            </button>
+            <button
+              onClick={() => {
+                handleDecBoard(board);
               }}
               className="bg-red-400 ml-2 rounded py-1 px-3 text-white"
             >

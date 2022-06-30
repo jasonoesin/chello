@@ -117,7 +117,7 @@ const InviteBoard = (props) => {
 
             let find = data
               .data()
-              .invite.find((obj) => obj["workspace"] === params.id);
+              .invite.find((obj) => obj["board"] === params.id);
 
             if (find) {
               toast.error("User has already invited", {
@@ -134,7 +134,7 @@ const InviteBoard = (props) => {
 
             updateDoc(colRef, {
               invite: arrayUnion({
-                workspace: params.id,
+                board: params.id,
               }),
             });
 

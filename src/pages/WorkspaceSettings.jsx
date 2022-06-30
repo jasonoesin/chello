@@ -6,7 +6,6 @@ import DeleteWorkspace from "../components/DeleteWorkspace";
 import InviteWorkspace from "../components/InviteWorkspace";
 import LeaveWorkspace from "../components/LeaveWorkspace";
 import Member from "../components/Member";
-import Notification from "../components/Notification";
 import { db } from "../firebase-config";
 import { UserAuth } from "../middleware/AuthContext";
 import Select from "react-select";
