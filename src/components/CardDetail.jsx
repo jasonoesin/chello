@@ -77,7 +77,7 @@ const CardDetail = (props) => {
 
   return (
     <>
-      <div className="backdrop-blur-sm z-30 inset-0 bg-black bg-opacity-30 h-screen flex justify-center  overflow-y-scroll p-28 fixed">
+      <div className="backdrop-blur-sm z-[100] inset-0 bg-black bg-opacity-30 h-screen flex justify-center  overflow-y-scroll p-28 fixed">
         <div className="bg-white p-10 rounded w-2/3 min-h-[33rem] h-fit relative">
           <svg
             onClick={() => {

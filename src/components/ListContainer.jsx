@@ -1,11 +1,13 @@
 import { createRef } from "react";
 import { useRef } from "react";
+import { UserAuth } from "../middleware/AuthContext";
 import AddList from "./AddList";
 import CardDetail from "./CardDetail";
 import ListComponent from "./ListComponent";
 
 const ListContainer = (props) => {
   const childRef = useRef();
+  const { nav } = UserAuth();
 
   const onChange = (e) => {
     childRef.current.searchOnChange(e);
@@ -17,6 +19,9 @@ const ListContainer = (props) => {
         {props.board.title}
         {props.isMember && (
           <svg
+            onClick={() => {
+              nav("/board/" + props.board.id + "/settings");
+            }}
             xmlns="http://www.w3.org/2000/svg"
             className="ml-4 mt-2 h-5 w-5 cursor-pointer"
             viewBox="0 0 20 20"

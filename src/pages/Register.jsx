@@ -6,31 +6,6 @@ import { toast } from "react-toastify";
 
 const auth = getAuth();
 
-const color = () => {
-  return [
-    {
-      name: "",
-      color: "bg-green-400",
-    },
-    {
-      name: "",
-      color: "bg-yellow-400",
-    },
-    {
-      name: "",
-      color: "bg-orange-400",
-    },
-    {
-      name: "",
-      color: "bg-red-400",
-    },
-    {
-      name: "",
-      color: "bg-blue-400",
-    },
-  ];
-};
-
 const Register = () => {
   const navigate = useNavigate();
 
@@ -79,7 +54,6 @@ const Register = () => {
           email: e.target.email.value,
           id: cred.user.uid,
           name: e.target.name.value,
-          labels: color(),
         });
 
         setDoc(doc(db, "notification", cred.user.uid), {

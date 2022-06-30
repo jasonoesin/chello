@@ -1,7 +1,15 @@
-import { collection, doc, onSnapshot, query, where } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  onSnapshot,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
 import { ref } from "firebase/storage";
 import { useState } from "react";
 import { useEffect } from "react";
+import { toast } from "react-toastify";
 import { db, storage } from "../firebase-config";
 import { UserAuth } from "../middleware/AuthContext";
 
@@ -25,6 +33,30 @@ const Settings = () => {
   }, [user]);
 
   const imageRef = ref(storage, `user-profiles/${user.uid}/`);
+
+  const submit = (e) => {
+    e.preventDefault();
+    updateDoc(doc(db, "user", user.uid), {
+      name: e.target.name.value,
+      bio: e.target.bio.value,
+    });
+
+    toast.success("Successfully Edit Profile !", {
+      position: "bottom-right",
+
+      autoClose: 3500,
+
+      hideProgressBar: false,
+
+      closeOnClick: true,
+
+      pauseOnHover: true,
+
+      draggable: true,
+
+      progress: undefined,
+    });
+  };
 
   return (
     <>
@@ -62,33 +94,40 @@ const Settings = () => {
 
             <p className="font-bold">About</p>
             <hr className="border-none h-0.5 bg-gray-200 rounded" />
-            <div className="flex items-center">
-              <label htmlFor="" className="text-gray-600 font-medium grow">
-                Name
-              </label>
-              <input
-                className="w-1/2 text-sm font-normal p-2 bg-transparent border-2 border-gray-500 rounded-md"
-                type="text"
-                placeholder="Name"
-                defaultValue={state.name}
-              />
-            </div>
-            <div className="flex items-center">
-              <label htmlFor="" className="text-gray-600 font-medium grow">
-                Bio
-              </label>
-              <textarea
-                className="w-1/2 text-sm font-normal p-2 bg-transparent border-2 border-gray-500 rounded-md"
-                placeholder="Input your bio..."
-                defaultValue={state.bio}
-              />
-            </div>
+            <form className="space-y-5" onSubmit={submit}>
+              <div className="flex items-center">
+                <label htmlFor="" className="text-gray-600 font-medium grow">
+                  Name
+                </label>
+                <input
+                  name="name"
+                  className="w-1/2 text-sm font-normal p-2 bg-transparent border-2 border-gray-500 rounded-md"
+                  type="text"
+                  placeholder="Name"
+                  defaultValue={state.name}
+                />
+              </div>
+              <div className="flex items-center">
+                <label htmlFor="" className="text-gray-600 font-medium grow">
+                  Bio
+                </label>
+                <textarea
+                  name="bio"
+                  className="w-1/2 text-sm font-normal p-2 bg-transparent border-2 border-gray-500 rounded-md"
+                  placeholder="Input your bio..."
+                  defaultValue={state.bio}
+                />
+              </div>
 
-            <div className="w-full flex justify-end">
-              <button className="text-white cursor-pointer bg-blue-600 w-1/3 rounded">
-                Save
-              </button>
-            </div>
+              <div className="w-full flex justify-end">
+                <button
+                  type="submit"
+                  className="text-white cursor-pointer bg-blue-600 w-1/3 rounded"
+                >
+                  Save
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       </div>

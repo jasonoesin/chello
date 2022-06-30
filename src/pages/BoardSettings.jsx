@@ -2,6 +2,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc, onSnapshot, setDoc, updateDoc } from "firebase/firestore";
 import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
+import BoardMember from "../components/BoardMember";
 import DeleteWorkspace from "../components/DeleteWorkspace";
 import InviteWorkspace from "../components/InviteWorkspace";
 import LeaveWorkspace from "../components/LeaveWorkspace";
@@ -34,6 +35,13 @@ const BoardSettings = () => {
         }
         setData(snap.data());
 
+        if (!snap.data().members.includes(user.uid)) nav("/home");
+
+        if (snap.data().admins.includes(user.uid)) {
+          setIsMember(false);
+          return;
+        }
+
         // VALIDASI APAKAH BOARD MEMBER
 
         if (snap.data().members.includes(user.uid)) {
@@ -54,14 +62,6 @@ const BoardSettings = () => {
               return;
             }
           });
-        }
-
-        if (!snap.data().members.includes(user.uid)) nav("/home");
-
-        // ----
-
-        if (snap.data().admins.includes(user.uid)) {
-          setIsMember(false);
         }
       });
     }
@@ -90,10 +90,11 @@ const BoardSettings = () => {
     return string.charAt(0).toUpperCase() + string.slice(1);
   }
 
-  const setPrivate = () => {
-    if (data.visibility === "private") return;
+  const setBoardVisible = () => {
+    if (data.visibility === "board") return;
+
     updateDoc(ref, {
-      visibility: "private",
+      visibility: "board",
     });
   };
 
@@ -104,6 +105,13 @@ const BoardSettings = () => {
     });
   };
 
+  const setWorkspaceVisible = () => {
+    if (data.visibility === "workspace") return;
+    updateDoc(ref, {
+      visibility: "workspace",
+    });
+  };
+
   return (
     <>
       <div className="h-0">EMTPY DIV</div>
@@ -111,7 +119,7 @@ const BoardSettings = () => {
         <div className="px-16 flex justify-center ">
           <div className="flex flex-col justify-center w-2/5 space-y-5 relative">
             <div className="mt-1 mb-3 font-bold text-gray-900 tracking-tight text-4xl">
-              {data.name}
+              {data.title}
             </div>
             <div className="font-bold">Board Settings</div>
             <div className="flex">
@@ -148,13 +156,11 @@ const BoardSettings = () => {
                 ref={dropRef}
                 className=" hidden bg-white z-50 top-[10rem] -right-[15rem] absolute w-[20rem] text-xs  flex flex-col space-y-3 p-4 border shadow-md rounded"
               >
-                <div className="font-bold text-sm">
-                  Select Workspace Visibility
-                </div>
+                <div className="font-bold text-sm">Select Board Visibility</div>
                 <hr />
 
                 <button
-                  onClick={setPrivate}
+                  onClick={setWorkspaceVisible}
                   className="hover:bg-gray-100 rounded p-3"
                 >
                   <div className="flex items-center">
@@ -172,9 +178,9 @@ const BoardSettings = () => {
                         d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
                       />
                     </svg>
-                    <p className="ml-2">Private</p>
+                    <p className="ml-2">Workspace-Visible</p>
 
-                    {data.visibility && data.visibility === "private" ? (
+                    {data.visibility && data.visibility === "workspace" ? (
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         className="h-5 w-5 ml-2"
@@ -192,8 +198,7 @@ const BoardSettings = () => {
                     ) : null}
                   </div>
                   <p className="text-justify">
-                    This Workspace is private. It's not indexed or visible to
-                    those outside the Workspace.
+                    All members of the Workspace can see and edit this board.
                   </p>
                 </button>
 
@@ -242,11 +247,50 @@ const BoardSettings = () => {
                     boards.
                   </p>
                 </button>
+                <button
+                  onClick={setBoardVisible}
+                  className="hover:bg-gray-100 rounded p-3"
+                >
+                  <div className="flex items-center">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"
+                      />
+                    </svg>
+                    <p className="ml-2">Board-Visible</p>
+                    {data.visibility && data.visibility === "board" ? (
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5 ml-2"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                    ) : null}
+                  </div>
+
+                  <p className="text-justify">
+                    This Board is private. Only board members can see and edit
+                    this board.
+                  </p>
+                </button>
               </div>
-            </div>
-            <div className="">
-              This Workspace is private. It's not indexed or visible to those
-              outside the Workspace.
             </div>
 
             <button
@@ -255,12 +299,12 @@ const BoardSettings = () => {
               }}
               className="text-center bg-blue-600 rounded hover:bg-blue-700 text-white py-3"
             >
-              Invite others to Workspace
+              Invite others to Board
             </button>
 
             <p className="font-bold">Members</p>
 
-            <Member isMember={isMember} />
+            <BoardMember isMember={isMember} />
 
             {isMember ? (
               <LeaveWorkspace user={user.uid} />

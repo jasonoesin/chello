@@ -6,12 +6,17 @@ const isDev = require("electron-is-dev");
 function createWindow() {
   // Create the browser window.
   const win = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 1920,
+    height: 1080,
+    icon: path.join(__dirname, "trello.png"),
+    autoHideMenuBar: true,
     webPreferences: {
       nodeIntegration: true,
     },
   });
+
+  win.maximize();
+  win.setFullScreen(true);
 
   // and load the index.html of the app.
   // win.loadFile("index.html");
