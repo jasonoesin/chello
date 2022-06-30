@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { db } from "../firebase-config";
 import { UserAuth } from "../middleware/AuthContext";
+import Favorite from "./Favorite";
+import JoinedBoards from "./JoinedBoards";
 
 const HomeComponent = () => {
   const [favBoard, setFavBoard] = useState([]);
@@ -58,6 +60,7 @@ const HomeComponent = () => {
 
   return (
     <>
+      <Favorite />
       <div className="min-h-[18rem] relative">
         <div className="mt-1  font-bold text-gray-900 tracking-tight text-4xl">
           Public Workspace
@@ -197,6 +200,8 @@ const HomeComponent = () => {
           </ul>
         </div>
       </div>
+
+      <JoinedBoards />
     </>
   );
 };
