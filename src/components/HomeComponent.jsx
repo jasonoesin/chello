@@ -5,6 +5,7 @@ import { db } from "../firebase-config";
 import { UserAuth } from "../middleware/AuthContext";
 
 const HomeComponent = () => {
+  const [favBoard, setFavBoard] = useState([]);
   const [workspaceList, setWorkSpace] = useState([]);
   const [boards, setBoards] = useState([]);
   const colRef = collection(db, "workspace");
@@ -50,6 +51,8 @@ const HomeComponent = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (e.target.link.value.includes("invite-workspace/"))
+      nav(e.target.link.value);
+    else if (e.target.link.value.includes("invite-board/"))
       nav(e.target.link.value);
   };
 

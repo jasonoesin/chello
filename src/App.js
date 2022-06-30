@@ -25,6 +25,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ReminderContext } from "./notification/DueDateReminderContext";
 import BoardSettings from "./pages/BoardSettings";
+import InviteBoard from "./pages/InviteBoard";
 
 const NavLayout = () => {
   return (
@@ -82,6 +83,16 @@ function App() {
                   element={
                     <div className="w-screen h-screen flex justify-center items-center">
                       <Invite />
+                    </div>
+                  }
+                />
+
+                <Route
+                  exact
+                  path="/invite-board/:id"
+                  element={
+                    <div className="w-screen h-screen flex justify-center items-center">
+                      <InviteBoard />
                     </div>
                   }
                 />

@@ -4,9 +4,11 @@ import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import BoardMember from "../components/BoardMember";
 import DeleteWorkspace from "../components/DeleteWorkspace";
+import InviteBoard from "../components/InviteBoard";
 import InviteWorkspace from "../components/InviteWorkspace";
 import LeaveWorkspace from "../components/LeaveWorkspace";
 import Member from "../components/Member";
+import MembersFactory from "../components/MembersFactory";
 import { db } from "../firebase-config";
 import { UserAuth } from "../middleware/AuthContext";
 
@@ -304,7 +306,7 @@ const BoardSettings = () => {
 
             <p className="font-bold">Members</p>
 
-            <BoardMember isMember={isMember} />
+            <MembersFactory type="board" isMember={isMember} />
 
             {isMember ? (
               <LeaveWorkspace user={user.uid} />
@@ -317,7 +319,7 @@ const BoardSettings = () => {
           </div>
         </div>
 
-        {showModal ? <InviteWorkspace onClose={handleClose} /> : null}
+        {showModal ? <InviteBoard onClose={handleClose} /> : null}
       </div>
     </>
   );
