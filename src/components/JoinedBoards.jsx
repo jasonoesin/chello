@@ -1,4 +1,14 @@
-import { collection, onSnapshot, query, where } from "firebase/firestore";
+import {
+  arrayRemove,
+  arrayUnion,
+  collection,
+  doc,
+  getDoc,
+  onSnapshot,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
 import { useState } from "react";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
@@ -8,22 +18,33 @@ import { UserAuth } from "../middleware/AuthContext";
 const JoinedBoards = () => {
   const [boards, setBoards] = useState([]);
   const { nav, user } = UserAuth();
+  const [data, setCurrentData] = useState({});
 
   useEffect(() => {
+    var unsub, unsub2;
     if (user.uid) {
       const boardRef = query(
         collection(db, "board"),
         where("members", "array-contains", user.uid)
       );
 
-      const unsub = onSnapshot(boardRef, (dat) => {
+      unsub = onSnapshot(boardRef, (dat) => {
         setBoards(
           dat.docs.map((doc) => {
             return { ...doc.data(), id: doc.id };
           })
         );
       });
+
+      unsub2 = onSnapshot(doc(db, "user", user.uid), (key) => {
+        setCurrentData({ ...key.data(), id: key.id });
+      });
     }
+
+    return () => {
+      if (unsub) unsub();
+      if (unsub2) unsub2();
+    };
   }, [user]);
 
   return (
@@ -49,14 +70,32 @@ const JoinedBoards = () => {
             </li>
           ) : null}
           {boards.map((b) => {
+            console.log("mulai boards");
             return (
               <li
                 className="flex flex-row w-full relative items-center"
                 key={b.title}
               >
                 <svg
+                  onClick={async () => {
+                    console.log("mulai pencet");
+
+                    if (data && data.favorite && !data.favorite.includes(b.id))
+                      updateDoc(doc(db, "user", user.uid), {
+                        favorite: arrayUnion(b.id),
+                      });
+                    else {
+                      updateDoc(doc(db, "user", user.uid), {
+                        favorite: arrayRemove(b.id),
+                      });
+                    }
+                  }}
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6 absolute -right-12 flex fill-yellow-300"
+                  className={`h-6 w-6 absolute -right-12 flex cursor-pointer ${
+                    data && data.favorite && data.favorite.includes(b.id)
+                      ? "fill-yellow-300"
+                      : null
+                  }`}
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"

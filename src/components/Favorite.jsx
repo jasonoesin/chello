@@ -44,7 +44,7 @@ const Favorite = () => {
   if (fav.length === 0) return null;
 
   return (
-    <div className="min-h-[18rem] relative">
+    <div className="min-h-[18rem] relative mb-14">
       <div className="mt-1  font-bold text-gray-900 tracking-tight text-4xl">
         Favorited Boards
       </div>
