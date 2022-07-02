@@ -70,7 +70,6 @@ const JoinedBoards = () => {
             </li>
           ) : null}
           {boards.map((b) => {
-            console.log("mulai boards");
             return (
               <li
                 className="flex flex-row w-full relative items-center"
@@ -78,8 +77,6 @@ const JoinedBoards = () => {
               >
                 <svg
                   onClick={async () => {
-                    console.log("mulai pencet");
-
                     if (data && data.favorite && !data.favorite.includes(b.id))
                       updateDoc(doc(db, "user", user.uid), {
                         favorite: arrayUnion(b.id),
@@ -91,7 +88,7 @@ const JoinedBoards = () => {
                     }
                   }}
                   xmlns="http://www.w3.org/2000/svg"
-                  className={`h-6 w-6 absolute -right-12 flex cursor-pointer ${
+                  className={`stroke-gray-500 h-6 w-6 absolute -right-12 flex cursor-pointer ${
                     data && data.favorite && data.favorite.includes(b.id)
                       ? "fill-yellow-300"
                       : null

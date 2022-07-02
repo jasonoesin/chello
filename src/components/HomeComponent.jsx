@@ -211,7 +211,7 @@ const HomeComponent = () => {
                       }
                     }}
                     xmlns="http://www.w3.org/2000/svg"
-                    className={`h-6 w-6 absolute -right-12 flex cursor-pointer ${
+                    className={`stroke-gray-500 h-6 w-6 absolute -right-12 flex cursor-pointer ${
                       data && data.favorite && data.favorite.includes(b.id)
                         ? "fill-yellow-300"
                         : null

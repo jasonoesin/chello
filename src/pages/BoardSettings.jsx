@@ -3,9 +3,12 @@ import { doc, getDoc, onSnapshot, setDoc, updateDoc } from "firebase/firestore";
 import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import BoardMember from "../components/BoardMember";
+import CloseBoard from "../components/CloseBoard";
+import DeleteBoard from "../components/DeleteBoard";
 import DeleteWorkspace from "../components/DeleteWorkspace";
 import InviteBoard from "../components/InviteBoard";
 import InviteWorkspace from "../components/InviteWorkspace";
+import LeaveBoard from "../components/Leaveboard";
 import LeaveWorkspace from "../components/LeaveWorkspace";
 import Member from "../components/Member";
 import MembersFactory from "../components/MembersFactory";
@@ -309,11 +312,12 @@ const BoardSettings = () => {
             <MembersFactory type="board" isMember={isMember} />
 
             {isMember ? (
-              <LeaveWorkspace user={user.uid} />
+              <LeaveBoard user={user.uid} />
             ) : (
               <>
-                <LeaveWorkspace user={user.uid} isMember={isMember} />
-                <DeleteWorkspace />
+                <LeaveBoard user={user.uid} isMember={isMember} />
+                <CloseBoard />
+                <DeleteBoard />
               </>
             )}
           </div>
