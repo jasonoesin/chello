@@ -5,6 +5,7 @@ import {
   where,
   updateDoc,
   doc,
+  getDoc,
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { db } from "../firebase-config";
@@ -31,13 +32,29 @@ const Card = (props) => {
   }, []);
 
   const dueDateColor = (val) => {
-    if (!val) return "bg-gray-300";
-
+    if (val === undefined || val === "no") return "bg-gray-300";
     if (val === "yes") return "bg-green-300";
     else return "bg-red-300";
   };
 
   const createNewCard = (card, index) => {
+    (async () => {
+      // getDoc(doc(db, "card", d.id)).then((c) => {
+      //   if (new Date() > new Date(c.data().duedate)) {
+      //     updateDoc(doc(db, "card", d.id), {
+      //       done: "due",
+      //     });
+      //   })
+
+      getDoc(doc(db, "card", card.id)).then((c) => {
+        if (new Date() > new Date(c.data().duedate)) {
+          updateDoc(doc(db, "card", c.id), {
+            done: "due",
+          });
+        }
+      });
+    })();
+
     if (props.isMember)
       return (
         <Draggable key={card.id} draggableId={card.id} index={index}>
@@ -86,7 +103,7 @@ const Card = (props) => {
 
                         if (card.done && card.done === "yes") {
                           updateDoc(doc(db, "card", card.id), {
-                            done: "",
+                            done: "no",
                           });
                           return;
                         }

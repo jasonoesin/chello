@@ -29,13 +29,12 @@ export const ReminderContext = ({ children }) => {
         const fetch = async () => {
           while (true)
             await new Promise((resolve) => {
-              //   console.log("awal async timeout");
+              // console.log("awal async timeout");
               //   QUERY REMINDER TIAP SATU MENIT
 
               getDocs(colRef)
                 .then((snap) => {
                   snap.docs.forEach((d) => {
-                    console.log(new Date(d.data().reminder));
                     if (new Date() > new Date(d.data().reminder)) {
                       // REMIND
 
