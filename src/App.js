@@ -26,6 +26,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { ReminderContext } from "./notification/DueDateReminderContext";
 import BoardSettings from "./pages/BoardSettings";
 import InviteBoard from "./pages/InviteBoard";
+import BoardCalendar from "./pages/BoardCalendar";
 
 const NavLayout = () => {
   return (
@@ -72,6 +73,10 @@ function App() {
                   <Route
                     path="board/:id/settings"
                     element={<BoardSettings />}
+                  />
+                  <Route
+                    path="board/:id/calendar"
+                    element={<BoardCalendar />}
                   />
                   <Route path="settings" element={<Settings />} />
                   <Route path="home" element={<Home />} />

@@ -1,5 +1,6 @@
 import { createRef } from "react";
 import { useRef } from "react";
+import { useLocation } from "react-router-dom";
 import { UserAuth } from "../middleware/AuthContext";
 import AddList from "./AddList";
 import CardDetail from "./CardDetail";
@@ -8,6 +9,7 @@ import ListComponent from "./ListComponent";
 const ListContainer = (props) => {
   const childRef = useRef();
   const { nav } = UserAuth();
+  const loc = useLocation();
 
   const onChange = (e) => {
     childRef.current.searchOnChange(e);
@@ -15,7 +17,7 @@ const ListContainer = (props) => {
 
   return (
     <>
-      <div className="mt-1 mb-3 font-bold text-gray-900 tracking-tight text-4xl flex items-center">
+      <div className="mt-1 mb-3 font-bold text-gray-900 relative tracking-tight text-4xl flex items-center">
         {props.board.title}
         {props.isMember && (
           <svg
@@ -41,6 +43,16 @@ const ListContainer = (props) => {
           type="text "
           placeholder="Search for lists"
         />
+        <button
+          onClick={() => {
+            nav(loc.pathname + "/calendar");
+          }}
+          className=" w-fit flex justify-center 
+                hover:bg-gray-500
+                bg-gray-600 p-2 rounded absolute right-[20rem] text-white text-sm"
+        >
+          Calendar View
+        </button>
       </div>
       <div className="flex flex-wrap ">
         <ListComponent
