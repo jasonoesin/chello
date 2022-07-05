@@ -1,9 +1,51 @@
-import { deleteDoc, doc, setDoc } from "firebase/firestore";
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDoc,
+  onSnapshot,
+  query,
+  setDoc,
+  where,
+} from "firebase/firestore";
 import { Fragment, useEffect, useRef, useState } from "react";
 import { db } from "../firebase-config";
+import Select from "react-select";
+import { UserAuth } from "../middleware/AuthContext";
+
+import { toast } from "react-toastify";
 
 const OpenBoard = (props) => {
   const [modal, setModal] = useState(false);
+  const { user } = UserAuth();
+  const [options, setOptions] = useState([]);
+
+  useEffect(() => {
+    if (user.uid) {
+      const q = query(
+        collection(db, "workspace"),
+        where("members", "array-contains", user.uid)
+      );
+
+      onSnapshot(q, (snap) => {
+        if (!snap.empty) {
+          let b = [];
+          snap.docs.forEach((d) => {
+            if (d.data().id === user.uid) return;
+
+            b.push({
+              value: d.id,
+              label: d.data().name,
+            });
+          });
+
+          setOptions(b);
+        } else {
+          setOptions([]);
+        }
+      });
+    }
+  }, []);
 
   useEffect(() => {
     let handler = (e) => {
@@ -20,6 +62,8 @@ const OpenBoard = (props) => {
 
   const popRef = useRef();
   const ref2 = useRef();
+
+  const selectRef = useRef();
   return (
     <Fragment>
       <svg
@@ -43,14 +87,34 @@ const OpenBoard = (props) => {
       {modal && (
         <div
           ref={ref2}
-          className="text-gray-500 rounded absolute -right-[18rem] bg-white shadow-lg h-32 p-3 w-[12rem] flex justify-center items-center flex-col"
+          className="text-gray-500 rounded absolute -right-[20rem] bg-white shadow-lg h-fit p-3 w-[16rem] flex justify-center items-center flex-col"
         >
-          Open this Board ?
+          Open this Board ?<p>Select Workspace to open on</p>
+          <Select
+            onChange={(e) => {
+              selectRef.current = e.value;
+            }}
+            className="mt-2 w-full"
+            options={options}
+          />
           <button
             onClick={() => {
+              if (selectRef.current === undefined) {
+                toast.error(
+                  "Please select Workspace to open the closed board on !",
+                  {
+                    position: "bottom-right",
+                    autoClose: 3500,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                  }
+                );
+              }
               const newRef = doc(db, "board", props.board.id);
-
-              setDoc(newRef, { ...props.board });
+              setDoc(newRef, { ...props.board, workspace: selectRef.current });
               deleteDoc(doc(db, "closedboard", props.board.id));
             }}
             className="text-xs font-bold mt-2 w-fit flex justify-center 
