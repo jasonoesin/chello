@@ -26,7 +26,7 @@ const Invite = () => {
   const params = useParams();
   const ref = doc(db, "link", params.id);
   var [workspaceRef, setWorkspaceRef] = useState(null);
-  const { user } = UserAuth();
+  const { user, userData } = UserAuth();
 
   var prom;
 
@@ -68,6 +68,21 @@ const Invite = () => {
         updateDoc(workspaceRef, {
           members: arrayUnion(auth.currentUser.uid),
         });
+
+      getDoc(workspaceRef).then((s) => {
+        s.data().members.map((id) => {
+          if (user.uid === id) return;
+          updateDoc(doc(db, "notification", id), {
+            reminder: arrayUnion(
+              "User " +
+                userData.name +
+                " joined the " +
+                s.data().name +
+                " workspace."
+            ),
+          });
+        });
+      });
     }
 
     nav("/home");

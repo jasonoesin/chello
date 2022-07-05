@@ -20,7 +20,7 @@ const NotificationComponent = () => {
   const [bdlist, setBdList] = useState([]);
   const [delList, setDelList] = useState([]);
   const { notifs } = GetNotif();
-  const { user } = UserAuth();
+  const { user, userData } = UserAuth();
 
   useEffect(() => {
     if (notifs !== undefined) {
@@ -99,6 +99,22 @@ const NotificationComponent = () => {
       pauseOnHover: true,
       draggable: true,
       progress: undefined,
+    });
+
+    getDoc(workspaceRef).then((s) => {
+      s.data().members.map((id) => {
+        if (user.uid === id) return;
+
+        updateDoc(doc(db, "notification", id), {
+          reminder: arrayUnion(
+            "User " +
+              userData.name +
+              " joined the " +
+              s.data().name +
+              " workspace."
+          ),
+        });
+      });
     });
   };
 
