@@ -9,16 +9,17 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
-import { useState } from "react";
+import { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { db } from "../firebase-config";
 import { UserAuth } from "../middleware/AuthContext";
 
-const JoinedBoards = () => {
+const JoinedBoards = forwardRef((props, ref) => {
   const [boards, setBoards] = useState([]);
   const { nav, user } = UserAuth();
   const [data, setCurrentData] = useState({});
+  const cleanBoards = useRef([]);
 
   useEffect(() => {
     var unsub, unsub2;
@@ -34,6 +35,12 @@ const JoinedBoards = () => {
             return { ...doc.data(), id: doc.id };
           })
         );
+
+        cleanBoards.current = dat.docs.map((doc) => {
+          return { ...doc.data(), id: doc.id };
+        });
+
+        // if (useRef.current === undefined) useRef.current = [];
       });
 
       unsub2 = onSnapshot(doc(db, "user", user.uid), (key) => {
@@ -46,6 +53,22 @@ const JoinedBoards = () => {
       if (unsub2) unsub2();
     };
   }, [user]);
+
+  useImperativeHandle(ref, () => ({
+    onFilter(e) {
+      if (e.target.value !== "") {
+        setBoards(
+          boards.filter((ws) => {
+            return ws.title
+              .toLowerCase()
+              .includes(e.target.value.toLowerCase());
+          })
+        );
+      } else {
+        setBoards(cleanBoards.current);
+      }
+    },
+  }));
 
   return (
     <div className="min-h-[18rem] mt-14">
@@ -136,6 +159,6 @@ const JoinedBoards = () => {
       </div>
     </div>
   );
-};
+});
 
 export default JoinedBoards;

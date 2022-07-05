@@ -6,16 +6,18 @@ import {
   onSnapshot,
   updateDoc,
 } from "firebase/firestore";
-import { useEffect } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { db } from "../firebase-config";
 import { UserAuth } from "../middleware/AuthContext";
 
-const Favorite = () => {
+const Favorite = forwardRef((props, ref) => {
   const [fav, setFav] = useState([]);
 
   const { user, nav } = UserAuth();
+
+  const cleanFavs = useRef([]);
 
   useEffect(() => {
     var sub, sub2;
@@ -27,10 +29,14 @@ const Favorite = () => {
             const qSnap = await getDoc(q);
             return { ...qSnap.data(), id: qSnap.id };
           });
-        } else setFav([]);
+        } else {
+          setFav([]);
+          cleanFavs.current = [];
+        }
 
         Promise.all(prom).then((docs) => {
           setFav(docs);
+          cleanFavs.current = docs;
         });
       });
     }
@@ -40,6 +46,22 @@ const Favorite = () => {
       if (sub2) sub2();
     };
   }, [user]);
+
+  useImperativeHandle(ref, () => ({
+    onFilter(e) {
+      if (e.target.value !== "") {
+        setFav(
+          cleanFavs.current.filter((ws) => {
+            return ws.title
+              .toLowerCase()
+              .includes(e.target.value.toLowerCase());
+          })
+        );
+      } else {
+        setFav(cleanFavs.current);
+      }
+    },
+  }));
 
   if (fav.length === 0) return null;
 
@@ -56,6 +78,8 @@ const Favorite = () => {
       <div className="flex flex-col container max-w-sm mt-10 w-full items-center justify-center bg-gray-100 dark:bg-gray-800 rounded-lg shadow-lg">
         <ul className="w-full">
           {fav.map((b) => {
+            if (b.members === undefined) return null;
+
             return (
               <li
                 className="flex flex-row w-full relative items-center"
@@ -98,9 +122,7 @@ const Favorite = () => {
                     <div className="font-medium dark:text-white">{b.title}</div>
                   </div>
                   <div className="flex flex-row justify-center">
-                    <div className="text-gray-600 dark:text-gray-200 text-xs">
-                      {b.members.length} Total Member
-                    </div>
+                    <div className="text-gray-600 dark:text-gray-200 text-xs"></div>
                     <button className="w-10 text-right flex justify-end">
                       <svg
                         width="20"
@@ -122,6 +144,6 @@ const Favorite = () => {
       </div>
     </div>
   );
-};
+});
 
 export default Favorite;

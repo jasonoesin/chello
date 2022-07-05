@@ -6,7 +6,7 @@ import {
   onSnapshot,
   updateDoc,
 } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { db } from "../firebase-config";
 import { UserAuth } from "../middleware/AuthContext";
@@ -14,13 +14,14 @@ import Favorite from "./Favorite";
 import JoinedBoards from "./JoinedBoards";
 
 const HomeComponent = () => {
-  const [favBoard, setFavBoard] = useState([]);
   const [workspaceList, setWorkSpace] = useState([]);
   const [boards, setBoards] = useState([]);
   const colRef = collection(db, "workspace");
   const boardRef = collection(db, "board");
 
   const { user, nav } = UserAuth();
+  const cleanBoards = useRef();
+  const cleanWorkspaces = useRef();
 
   useEffect(() => {
     const unsub1 = onSnapshot(colRef, (snapshot) => {
@@ -32,8 +33,10 @@ const HomeComponent = () => {
             workspaces.push({ ...doc.data(), id: doc.id });
         });
         setWorkSpace(workspaces);
+        cleanWorkspaces.current = workspaces;
       } else {
         setWorkSpace([]);
+        cleanWorkspaces.current = [];
       }
     });
 
@@ -46,8 +49,10 @@ const HomeComponent = () => {
             boards.push({ ...doc.data(), id: doc.id });
         });
         setBoards(boards);
+        cleanBoards.current = boards;
       } else {
         setBoards([]);
+        cleanBoards.current = [];
       }
     });
 
@@ -82,9 +87,38 @@ const HomeComponent = () => {
     };
   }, [user]);
 
+  const searchOnChange = (e) => {
+    if (e.target.value !== "") {
+      setBoards(
+        cleanBoards.current.filter((board) => {
+          return board.title
+            .toLowerCase()
+            .includes(e.target.value.toLowerCase());
+        })
+      );
+    } else {
+      setBoards(cleanBoards.current);
+    }
+
+    if (e.target.value !== "") {
+      setWorkSpace(
+        cleanWorkspaces.current.filter((ws) => {
+          return ws.name.toLowerCase().includes(e.target.value.toLowerCase());
+        })
+      );
+    } else {
+      setWorkSpace(cleanWorkspaces.current);
+    }
+    joinedRef.current.onFilter(e);
+    favRef.current.onFilter(e);
+  };
+
+  const joinedRef = useRef();
+  const favRef = useRef();
+
   return (
     <>
-      <Favorite />
+      <Favorite ref={favRef} />
       <div className="min-h-[18rem] relative">
         <div className="mt-1  font-bold text-gray-900 tracking-tight text-4xl">
           Public Workspace
@@ -107,6 +141,12 @@ const HomeComponent = () => {
             >
               Join
             </button>
+            <input
+              onChange={searchOnChange}
+              className="absolute right-0 top-[5rem] w-full text-sm font-normal p-2 bg-transparent border-2 border-gray-500 rounded-md"
+              type="text "
+              placeholder="Search for Workspaces or Boards"
+            />
           </form>
         </div>
 
@@ -262,7 +302,7 @@ const HomeComponent = () => {
         </div>
       </div>
 
-      <JoinedBoards />
+      <JoinedBoards ref={joinedRef} />
     </>
   );
 };
