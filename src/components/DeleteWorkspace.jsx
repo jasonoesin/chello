@@ -1,9 +1,14 @@
 import {
   arrayUnion,
+  collection,
   deleteDoc,
   doc,
   getDoc,
+  getDocs,
+  query,
+  setDoc,
   updateDoc,
+  where,
 } from "firebase/firestore";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -111,6 +116,20 @@ const DeleteWorkspace = () => {
 
                       return;
                     }
+
+                    const colRef = collection(db, "board");
+                    const q = query(
+                      colRef,
+                      where("workspace", "==", params.id)
+                    );
+
+                    getDocs(q).then((docs) => {
+                      docs.docs.map((cb) => {
+                        const newRef = doc(db, "closedboard", cb.id);
+                        setDoc(newRef, { ...cb.data() });
+                        deleteDoc(doc(db, "board", cb.id));
+                      });
+                    });
 
                     deleteDoc(ref);
                     nav("/home");

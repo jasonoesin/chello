@@ -49,6 +49,7 @@ const OpenBoard = (props) => {
           <button
             onClick={() => {
               const newRef = doc(db, "board", props.board.id);
+
               setDoc(newRef, { ...props.board });
               deleteDoc(doc(db, "closedboard", props.board.id));
             }}
