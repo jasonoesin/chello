@@ -63,6 +63,7 @@ const HomeComponent = () => {
       nav(e.target.link.value);
     else if (e.target.link.value.includes("invite-board/"))
       nav(e.target.link.value);
+    else if (e.target.link.value.includes("card/")) nav(e.target.link.value);
   };
 
   const [data, setData] = useState({});
@@ -98,7 +99,7 @@ const HomeComponent = () => {
               name="link"
               className="italic text-gray-400 appearance-none bg-transparent border-none w-[15rem] text-gray-700  py-1 px-2 leading-tight focus:outline-none text-sm"
               type="text"
-              placeholder="Link"
+              placeholder="Invite Link or Card Link"
             ></input>
             <button
               className="flex-shrink-0 bg-teal-500 hover:bg-teal-700 border-teal-500 hover:border-teal-700 text-sm border-4 text-white py-1 px-4 rounded"
