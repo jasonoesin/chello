@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useLayoutEffect } from "react";
 import LabelColor from "./LabelColor";
 import { db } from "../firebase-config";
 import { useState } from "react";

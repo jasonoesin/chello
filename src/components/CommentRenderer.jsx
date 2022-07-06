@@ -51,7 +51,12 @@ const CommentRenderer = (props) => {
 
       {comments.map(({ comment, user }) => {
         return (
-          <Comment key={comment + user} comment={comment} user_ref={user} />
+          <Comment
+            key={comment + user}
+            comment={comment}
+            user_ref={user}
+            card={props.card}
+          />
         );
       })}
     </>
