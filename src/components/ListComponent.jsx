@@ -75,26 +75,19 @@ const ListComponent = forwardRef((props, ref) => {
 
   // SEARCH
   const [filter, setFiltered] = useState([]);
-
-  // useEffect(() => {
-  //   setFiltered(
-  //     contacts.filter(
-  //       (user) =>
-  //         user.name.toLowerCase().includes(search.toLowerCase()) ||
-  //         user.city.toLowerCase().includes(search.toLowerCase())
-  //     )
-  //   );
-  // }, [search]);
+  const [search, setSearch] = useState("");
 
   useImperativeHandle(ref, () => ({
-    searchOnChange(e) {
-      setFiltered(
-        lists.filter((list) => {
-          return list.title
-            .toLowerCase()
-            .includes(e.target.value.toLowerCase());
-        })
-      );
+    searchOnChange(e, curr) {
+      if (curr === "card") setSearch(e.target.value.toLowerCase());
+      else if (curr === "list")
+        setFiltered(
+          lists.filter((list) => {
+            return list.title
+              .toLowerCase()
+              .includes(e.target.value.toLowerCase());
+          })
+        );
     },
   }));
 
@@ -156,6 +149,7 @@ const ListComponent = forwardRef((props, ref) => {
                 )}
 
                 <Card
+                  search={search}
                   list={list.id}
                   handle={handleClickCard}
                   isMember={props.isMember}

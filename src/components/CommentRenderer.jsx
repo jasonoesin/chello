@@ -4,6 +4,7 @@ import { useState } from "react";
 import { db } from "../firebase-config";
 import { UserAuth } from "../middleware/AuthContext";
 import Comment from "./Comment";
+import { MentionsInput, Mention } from "react-mentions";
 
 const CommentRenderer = (props) => {
   const [comments, setComments] = useState([]);
