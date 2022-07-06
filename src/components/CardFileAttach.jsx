@@ -7,10 +7,17 @@ import {
   getDownloadURL,
   deleteObject,
 } from "firebase/storage";
-import { storage } from "../firebase-config";
+import { db, storage } from "../firebase-config";
 import { useEffect } from "react";
 import { useRef } from "react";
 import { toast } from "react-toastify";
+import {
+  arrayRemove,
+  arrayUnion,
+  doc,
+  onSnapshot,
+  updateDoc,
+} from "firebase/firestore";
 
 const CardFileAttach = (props) => {
   const [fileUpload, setfileUpload] = useState(null);
@@ -59,12 +66,49 @@ const CardFileAttach = (props) => {
     });
   }, [fileUpload, needRefresh]);
 
+  const [links, setLinks] = useState([]);
+
+  useEffect(() => {
+    const unsub = onSnapshot(doc(db, "card", props.card), (snap) => {
+      if (!snap.empty) {
+        setLinks(snap.data().attachlinks);
+      } else {
+        setLinks([]);
+      }
+    });
+  }, []);
+
   return (
     <div className="relative">
       <p className="p-2 font-medium">Card Attachments</p>
-
       {
         <div className="flex flex-col">
+          {links.map((link) => {
+            return (
+              <div className="flex">
+                <a
+                  target="_blank"
+                  className="italic px-8 py-2 font-medium w-52"
+                  href={"http://" + link}
+                >
+                  {link}
+                </a>
+
+                {props.isMember ? (
+                  <button
+                    onClick={() => {
+                      updateDoc(doc(db, "card", props.card), {
+                        attachlinks: arrayRemove(link),
+                      });
+                    }}
+                    className="underline mt-2 w-1/3 text-gray-600 hover:text-gray-800 text-xs ml-5 rounded-xl"
+                  >
+                    Detach Link
+                  </button>
+                ) : null}
+              </div>
+            );
+          })}
           {fileNameList.map((file, index) => {
             return (
               <div className="flex" key={file}>
@@ -111,20 +155,34 @@ const CardFileAttach = (props) => {
       }
 
       {props.isMember ? (
-        <div className="ml-3 mt-4 flex flex-col mb-4">
+        <>
           <input
-            onChange={(e) => {
-              setfileUpload(e.target.files[0]);
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                updateDoc(doc(db, "card", props.card), {
+                  attachlinks: arrayUnion(e.target.value.toLowerCase()),
+                });
+              }
             }}
-            type="file"
+            className="italic absolute mt-4 right-0 rounded bg-gray-200 px-4 py-1"
+            placeholder="Attach a Link"
           />
-          <button
-            onClick={uploadImage}
-            className="mt-2 px-4 py-1 w-1/4 bg-gray-100 hover:bg-gray-200 rounded border"
-          >
-            Submit
-          </button>
-        </div>
+
+          <div className="ml-3 mt-4 flex flex-col mb-4">
+            <input
+              onChange={(e) => {
+                setfileUpload(e.target.files[0]);
+              }}
+              type="file"
+            />
+            <button
+              onClick={uploadImage}
+              className="mt-2 px-4 py-1 w-1/4 bg-gray-100 hover:bg-gray-200 rounded border"
+            >
+              Submit
+            </button>
+          </div>
+        </>
       ) : null}
     </div>
   );
