@@ -1,9 +1,6 @@
 import { createRef, useState } from "react";
 import { useRef } from "react";
 import { UserAuth } from "../middleware/AuthContext";
-import AddList from "./AddList";
-import CardDetail from "./CardDetail";
-import ListComponent from "./ListComponent";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
