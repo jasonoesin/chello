@@ -83,32 +83,33 @@ const CardFileAttach = (props) => {
       <p className="p-2 font-medium">Card Attachments</p>
       {
         <div className="flex flex-col">
-          {links.map((link) => {
-            return (
-              <div className="flex">
-                <a
-                  target="_blank"
-                  className="italic px-8 py-2 font-medium w-52"
-                  href={"http://" + link}
-                >
-                  {link}
-                </a>
-
-                {props.isMember ? (
-                  <button
-                    onClick={() => {
-                      updateDoc(doc(db, "card", props.card), {
-                        attachlinks: arrayRemove(link),
-                      });
-                    }}
-                    className="underline mt-2 w-1/3 text-gray-600 hover:text-gray-800 text-xs ml-5 rounded-xl"
+          {links?.length > 0 &&
+            links.map((link) => {
+              return (
+                <div className="flex">
+                  <a
+                    target="_blank"
+                    className="italic px-8 py-2 font-medium w-52"
+                    href={"http://" + link}
                   >
-                    Detach Link
-                  </button>
-                ) : null}
-              </div>
-            );
-          })}
+                    {link}
+                  </a>
+
+                  {props.isMember ? (
+                    <button
+                      onClick={() => {
+                        updateDoc(doc(db, "card", props.card), {
+                          attachlinks: arrayRemove(link),
+                        });
+                      }}
+                      className="underline mt-2 w-1/3 text-gray-600 hover:text-gray-800 text-xs ml-5 rounded-xl"
+                    >
+                      Detach Link
+                    </button>
+                  ) : null}
+                </div>
+              );
+            })}
           {fileNameList.map((file, index) => {
             return (
               <div className="flex" key={file}>

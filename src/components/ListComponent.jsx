@@ -149,6 +149,8 @@ const ListComponent = forwardRef((props, ref) => {
                 )}
 
                 <Card
+                  onLabel={props.onLabel}
+                  onDueDate={props.onDueDate}
                   search={search}
                   list={list.id}
                   handle={handleClickCard}

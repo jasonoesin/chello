@@ -22,6 +22,9 @@ const ListContainer = (props) => {
 
   const [state, setState] = useState(false);
 
+  const [onDueDate, setOnDueDate] = useState(false);
+  const [onLabel, setOnLabel] = useState(false);
+
   return (
     <>
       <div className="mt-1 mb-3 font-bold text-gray-900 relative tracking-tight text-4xl flex items-center">
@@ -62,10 +65,58 @@ const ListContainer = (props) => {
           />
         )}
 
+        {onDueDate ? (
+          <button
+            onClick={() => {
+              setOnDueDate(!onDueDate);
+            }}
+            className=" w-fit flex justify-center 
+                hover:bg-blue-500
+                bg-blue-400 p-2 rounded absolute right-[9rem] text-white text-sm"
+          >
+            Cards with Due Date
+          </button>
+        ) : (
+          <button
+            onClick={() => {
+              setOnDueDate(!onDueDate);
+            }}
+            className=" w-fit flex justify-center 
+                hover:bg-gray-500
+                bg-gray-400 p-2 rounded absolute right-[9rem] text-white text-sm"
+          >
+            Cards with Due Date
+          </button>
+        )}
+
+        {onLabel ? (
+          <button
+            onClick={() => {
+              setOnLabel(!onLabel);
+            }}
+            className=" w-fit flex justify-center 
+                hover:bg-blue-500
+                bg-blue-400 p-2 rounded absolute right-[0rem] text-white text-sm"
+          >
+            Cards with Label
+          </button>
+        ) : (
+          <button
+            onClick={() => {
+              setOnLabel(!onLabel);
+            }}
+            className=" w-fit flex justify-center 
+                hover:bg-gray-500
+                bg-gray-400 p-2 rounded absolute right-[0rem] text-white text-sm"
+          >
+            Cards with Label
+          </button>
+        )}
+
         <svg
           onClick={() => setState(!state)}
           xmlns="http://www.w3.org/2000/svg"
-          className="h-6 w-6 relative cursor-pointer ml-20"
+          className="h-6 w-6 relative cursor-pointer ml-20 stroke-gray-500"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -91,6 +142,8 @@ const ListContainer = (props) => {
       </div>
       <div className="flex flex-wrap ">
         <ListComponent
+          onLabel={onLabel}
+          onDueDate={onDueDate}
           ref={childRef}
           isMember={props.isMember}
           board={props.board}

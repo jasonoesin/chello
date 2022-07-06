@@ -55,6 +55,13 @@ const Card = (props) => {
       });
     })();
 
+    if (props.onDueDate && card.duedate === undefined) return null;
+    if (
+      props.onLabel &&
+      (card.labels === undefined || card.labels.length === 0)
+    )
+      return null;
+
     if (props.isMember) {
       if (card.title.toLowerCase().includes(props.search))
         return (
