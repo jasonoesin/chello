@@ -20,6 +20,7 @@ import CardFileAttach from "./CardFileAttach";
 import CardLink from "./CardLink";
 import CommentRenderer from "./CommentRenderer";
 import DueDate from "./DueDate";
+import CardMap from "./CardMap";
 
 const CardDetail = (props) => {
   const modules = {
@@ -156,10 +157,14 @@ const CardDetail = (props) => {
                 />
               </div> */}
               <CheckListRender card={props.current.id} />
+
               <CardFileAttach
                 isMember={props.isMember}
                 card={props.current.id}
               />
+
+              {data.location && <CardMap card={props.current.id} />}
+
               <CommentRenderer
                 isMember={props.isMember}
                 card={props.current.id}
@@ -353,6 +358,36 @@ const CardDetail = (props) => {
 
                 <CardLink card={props.current.id} />
                 <DueDate card={props.current.id} board={props.board} />
+
+                <div
+                  onClick={() => {
+                    updateDoc(doc(db, "card", props.current.id), {
+                      location: true,
+                    });
+                  }}
+                  className="!LOCATION relative p-2 mt-2 flex bg-gray-100 rounded-sm hover:bg-gray-200 cursor-pointer"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                    />
+                  </svg>
+                  <p className="ml-2">Add Location</p>
+                </div>
               </div>
             ) : null}
           </div>
