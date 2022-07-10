@@ -14,6 +14,10 @@ import {
 import { db } from "../firebase-config";
 import { useNavigate } from "react-router-dom";
 import { UserAuth } from "../middleware/AuthContext";
+import {
+  notifyReminderWatcher,
+  notifyWatcher,
+} from "../components/Observer/WatcherSubject";
 
 const newContext = createContext();
 
@@ -22,6 +26,7 @@ export const ReminderContext = ({ children }) => {
   const { user } = UserAuth();
 
   const colRef = collection(db, "reminder");
+  const cardRef = collection(db, "card");
 
   useEffect(() => {
     if (user)
@@ -31,6 +36,23 @@ export const ReminderContext = ({ children }) => {
             await new Promise((resolve) => {
               // console.log("awal async timeout");
               //   QUERY REMINDER TIAP SATU MENIT
+
+              getDocs(cardRef)
+                .then((snap) => {
+                  snap.docs.forEach((d) => {
+                    if (
+                      new Date() > new Date(d.data().duedate) &&
+                      !d.data().notify
+                    ) {
+                      notifyWatcher(d.id);
+                    }
+                  });
+                })
+                .then(() => {
+                  setTimeout(() => {
+                    resolve();
+                  }, 60000);
+                });
 
               getDocs(colRef)
                 .then((snap) => {
@@ -45,24 +67,26 @@ export const ReminderContext = ({ children }) => {
                           });
                         }
 
-                        getDoc(doc(db, "board", d.data().board)).then((s) => {
-                          s.data().members.map((id) => [
-                            updateDoc(doc(db, "notification", id), {
-                              reminder: arrayUnion(
-                                "Card " +
-                                  c.data().title +
-                                  " is almost due date."
-                              ),
-                            }),
-                          ]);
-                          deleteDoc(doc(db, "reminder", d.id));
-                        });
+                        notifyReminderWatcher(d.id);
+                        deleteDoc(doc(db, "reminder", d.id));
+
+                        // getDoc(doc(db, "board", d.data().board)).then((s) => {
+                        //   s.data().members.map((id) => [
+                        //     updateDoc(doc(db, "notification", id), {
+                        //       reminder: arrayUnion(
+                        //         "Card " +
+                        //           c.data().title +
+                        //           " is almost due date."
+                        //       ),
+                        //     }),
+                        //   ]);
+                        //   deleteDoc(doc(db, "reminder", d.id));
+                        // });
                       });
                     }
                   });
                 })
                 .then(() => {
-                  //   console.log("sudah mulai timeout");
                   setTimeout(() => {
                     resolve();
                   }, 60000);

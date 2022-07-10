@@ -21,6 +21,7 @@ import CardLink from "./CardLink";
 import CommentRenderer from "./CommentRenderer";
 import DueDate from "./DueDate";
 import CardMap from "./CardMap";
+import AddWatcher from "./AddWatcher";
 
 const CardDetail = (props) => {
   const modules = {
@@ -388,6 +389,8 @@ const CardDetail = (props) => {
                   </svg>
                   <p className="ml-2">Add Location</p>
                 </div>
+
+                <AddWatcher card_id={props.current.id} />
               </div>
             ) : null}
           </div>

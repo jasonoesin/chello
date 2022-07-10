@@ -47,7 +47,7 @@ const Card = (props) => {
       //   })
 
       getDoc(doc(db, "card", card.id)).then((c) => {
-        if (new Date() > new Date(c.data().duedate)) {
+        if (new Date() > new Date(c.data().duedate) && c.data().done != "yes") {
           updateDoc(doc(db, "card", c.id), {
             done: "due",
           });
