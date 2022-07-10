@@ -6,7 +6,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { db } from "../../firebase-config";
-import { notify, notifyReminder } from "./Watcher";
+import { notify, notifyNewComment, notifyReminder } from "./Watcher";
 import { toast } from "react-toastify";
 
 const msg = (message) => {
@@ -64,5 +64,16 @@ export async function notifyReminderWatcher(card_id) {
 
   watcher.map(async (watcher_id) => {
     return notifyReminder(watcher_id, card_id);
+  });
+}
+
+export async function notifyComment(card_id) {
+  const d = await getDoc(doc(db, "card", card_id));
+  const watcher = d.data().watcher;
+
+  if (watcher === undefined || watcher.length === 0) return;
+
+  watcher.map(async (watcher_id) => {
+    return notifyNewComment(watcher_id, card_id);
   });
 }

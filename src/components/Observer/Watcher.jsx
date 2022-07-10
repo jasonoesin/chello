@@ -22,3 +22,13 @@ export async function notifyReminder(watcher_id, card_id) {
     });
   });
 }
+
+export async function notifyNewComment(watcher_id, card_id) {
+  return getDoc(doc(db, "card", card_id)).then((d) => {
+    updateDoc(doc(db, "notification", watcher_id), {
+      reminder: arrayUnion(
+        "Card " + d.data().title + " has a new Comment. (Role Watcher)"
+      ),
+    });
+  });
+}

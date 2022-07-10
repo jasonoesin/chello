@@ -5,6 +5,7 @@ import { db } from "../firebase-config";
 import { UserAuth } from "../middleware/AuthContext";
 import Comment from "./Comment";
 import { MentionsInput, Mention } from "react-mentions";
+import { notifyComment } from "./Observer/WatcherSubject";
 
 const CommentRenderer = (props) => {
   const [comments, setComments] = useState([]);
@@ -28,6 +29,8 @@ const CommentRenderer = (props) => {
         user: user.uid,
       }),
     });
+
+    notifyComment(props.card);
   };
 
   return (
