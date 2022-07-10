@@ -27,6 +27,7 @@ import { ReminderContext } from "./notification/DueDateReminderContext";
 import BoardSettings from "./pages/BoardSettings";
 import InviteBoard from "./pages/InviteBoard";
 import BoardCalendar from "./pages/BoardCalendar";
+import Shortcut from "./components/Shortcut";
 
 const NavLayout = () => {
   return (
@@ -41,9 +42,11 @@ const NavLayout = () => {
 
 const Protected = () => {
   return (
-    <ProtectedRoute>
-      <Outlet />
-    </ProtectedRoute>
+    <Shortcut>
+      <ProtectedRoute>
+        <Outlet />
+      </ProtectedRoute>
+    </Shortcut>
   );
 };
 
