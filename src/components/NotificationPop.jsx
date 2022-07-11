@@ -3,6 +3,22 @@ import { Link } from "react-router-dom";
 import { GetNotif } from "../notification/NotifContext";
 import NotificationComponent from "./NotificationComponent";
 
+import Select from "react-select";
+const options = [
+  {
+    value: "instant",
+    label: "Instantly",
+  },
+  {
+    value: "periodically",
+    label: "Periodically",
+  },
+  {
+    value: "never",
+    label: "Never",
+  },
+];
+
 const NotificationPop = () => {
   let [isOpen, setIsOpen] = useState(false);
 
@@ -64,16 +80,17 @@ const NotificationPop = () => {
             id="dropdown-menu"
           >
             <div className="relative h-full">
-              <div className="py-3 px-4">
+              <div className="py-3 px-4 top-0">
                 <span className="block text-sm font-bold text-gray-900 dark:text-white">
                   Notifications
                 </span>
               </div>
-              <hr className="" />
 
+              <hr className="sticky " />
               <NotificationComponent />
-              <div className="underline cursor-pointer py-3 px-4 sticky bottom-0 text-sm bg-white w-full">
-                Change notification email frequency
+              <div className="underline cursor-pointer py-3 px-4 sticky bottom-0 text-sm bg-white w-full flex items-center">
+                <p>Notification Frequency</p>
+                <Select options={options} className="ml-3 grow fixed" />
               </div>
             </div>
           </div>
